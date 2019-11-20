@@ -8,7 +8,7 @@ public class FacturasDAO implements GenericoDAO<Facturas> {
 
 	@Override
 	public Facturas findByPK(int id) throws Exception {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
