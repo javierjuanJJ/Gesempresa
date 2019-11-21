@@ -76,6 +76,10 @@ public class Main extends Application {
 			archivo.append("Perfil");
 			icono.append("principio.png");
 			break;
+		case "Pantalla_Facturas":
+			archivo.append("Facturas");
+			icono.append("principio.png");
+			break;
 		default:
 			break;
 		}

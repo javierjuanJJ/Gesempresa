@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlador.ControladorFormularioFacturas">
+   <children>
+      <AnchorPane prefHeight="631.0" prefWidth="765.0">
+         <children>
+            <TableView fx:id="facturas" layoutX="6.0" layoutY="14.0" prefHeight="611.0" prefWidth="385.0" />
+            <Button layoutX="566.0" layoutY="167.0" mnemonicParsing="false" text="Consultar" />
+            <Label layoutX="475.0" layoutY="56.0" text="Facturas disponibles: " />
+            <Label layoutX="484.0" layoutY="275.0" text="Cliente" />
+            <Label layoutX="484.0" layoutY="316.0" text="Vendedor" />
+            <Label layoutX="484.0" layoutY="362.0" text="Articulo" />
+            <ComboBox fx:id="ComboBox_Facturas" layoutX="600.0" layoutY="52.0" onAction="#poner_informacion" onMouseClicked="#actualizar" prefWidth="150.0" />
+            <ComboBox layoutX="558.0" layoutY="271.0" prefWidth="150.0" />
+            <ComboBox layoutX="558.0" layoutY="321.0" prefWidth="150.0" />
+            <ComboBox layoutX="580.0" layoutY="367.0" prefWidth="150.0" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

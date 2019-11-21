@@ -8,16 +8,18 @@ public class Facturas {
 	private Date fecha;
 	private Clientes cliente;
 	private Vendedores vendedor;
+	private String forma_de_pago;
 	private ArrayList<Lineas_Facturas> lineas_de_la_factura;
 	
 	public Facturas(int id, Date fecha, Clientes cliente, Vendedores vendedor,
-			ArrayList<Lineas_Facturas> lineas_de_la_factura) {
+			ArrayList<Lineas_Facturas> lineas_de_la_factura,String forma_de_pago) {
 		
 		this.id = id;
 		this.fecha = fecha;
 		this.cliente = cliente;
 		this.vendedor = vendedor;
 		this.lineas_de_la_factura = lineas_de_la_factura;
+		this.forma_de_pago = forma_de_pago;
 	}
 	
 	public Facturas() {
@@ -27,6 +29,7 @@ public class Facturas {
 		this.cliente = new Clientes();
 		this.vendedor = new Vendedores();
 		this.lineas_de_la_factura = new ArrayList();
+		this.forma_de_pago = "";
 	}
 	
 	public Facturas(Facturas factura) {
@@ -36,6 +39,7 @@ public class Facturas {
 		this.cliente = factura.getCliente();
 		this.vendedor = factura.getVendedor();
 		this.lineas_de_la_factura = factura.getLineas_de_la_factura();
+		this.forma_de_pago = factura.getForma_de_pago();
 	}
 
 	public int getId() {
@@ -57,6 +61,9 @@ public class Facturas {
 	public Clientes getCliente() {
 		return cliente;
 	}
+	public String getForma_de_pago() {
+		return this.forma_de_pago;
+	}
 
 	public void setCliente(Clientes cliente) {
 		this.cliente = cliente;
@@ -66,6 +73,9 @@ public class Facturas {
 		return vendedor;
 	}
 
+	public void setForma_de_pago(String forma_de_pago) {
+		this.forma_de_pago = forma_de_pago;
+	}
 	public void setVendedor(Vendedores vendedor) {
 		this.vendedor = vendedor;
 	}
@@ -79,8 +89,14 @@ public class Facturas {
 	}
 	@Override
 	public String toString() {
-		return "Facturas [id=" + id + ", fecha=" + fecha + ", cliente=" + cliente + ", vendedor=" + vendedor
-				+ ", lineas_de_la_factura=" + lineas_de_la_factura + "]";
+		
+		StringBuilder resultado=new StringBuilder();
+		
+		resultado.append(fecha + " Cliente: ");
+		resultado.append(cliente.getNombre() + " Vendedor: ");
+		resultado.append(vendedor.getNombre() + " ");
+		
+		return resultado.toString();
 	}
 	
 }

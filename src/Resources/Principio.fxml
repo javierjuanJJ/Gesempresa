@@ -16,7 +16,7 @@
                </children>
             </HBox>
             <Label alignment="CENTER" layoutX="48.0" layoutY="-1.0" prefHeight="50.0" prefWidth="395.0" styleClass="label_texto_principio" text="Formularios" />
-            <Button fx:id="facturas" disable="true" layoutX="1.0" layoutY="75.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="236.0" text="Facturas" />
+            <Button id="Pantalla_Facturas" fx:id="facturas" disable="true" layoutX="1.0" layoutY="75.0" mnemonicParsing="false" onAction="#Cambiar_Pantalla" prefHeight="25.0" prefWidth="236.0" text="Facturas" />
             <Button fx:id="grupos" disable="true" layoutX="237.0" layoutY="75.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="231.0" text="Grupos" />
             <Label layoutX="34.0" layoutY="151.0" text="Usuario: " />
             <Label layoutX="34.0" layoutY="190.0" text="Contraseña: " />

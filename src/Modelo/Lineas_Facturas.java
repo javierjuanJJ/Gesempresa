@@ -2,14 +2,12 @@ package Modelo;
 
 public class Lineas_Facturas {
 	private int linea;
-	private Facturas factura;
 	private Articulos articulo;
 	private int cantidad;
 	private double importe;
 	
-	public Lineas_Facturas(int linea, Facturas factura, Articulos articulo, int cantidad, double importe) {
+	public Lineas_Facturas(int linea, Articulos articulo, int cantidad, double importe) {
 		this.linea = linea;
-		this.factura = factura;
 		this.articulo = articulo;
 		this.cantidad = cantidad;
 		this.importe = importe;
@@ -17,7 +15,6 @@ public class Lineas_Facturas {
 	
 	public Lineas_Facturas() {
 		this.linea = 0;
-		this.factura = new Facturas();
 		this.articulo = new Articulos();
 		this.cantidad = 0;
 		this.importe = 0;
@@ -25,7 +22,6 @@ public class Lineas_Facturas {
 	
 	public Lineas_Facturas(Lineas_Facturas lineas_factura) {
 		this.linea = lineas_factura.getLinea();
-		this.factura = lineas_factura.getFactura();
 		this.articulo = lineas_factura.getArticulo();
 		this.cantidad = lineas_factura.getCantidad();
 		this.importe = lineas_factura.getImporte();
@@ -38,15 +34,7 @@ public class Lineas_Facturas {
 	public void setLinea(int linea) {
 		this.linea = linea;
 	}
-
-	public Facturas getFactura() {
-		return factura;
-	}
-
-	public void setFactura(Facturas factura) {
-		this.factura = factura;
-	}
-
+	
 	public Articulos getArticulo() {
 		return articulo;
 	}
@@ -73,7 +61,7 @@ public class Lineas_Facturas {
 
 	@Override
 	public String toString() {
-		return "Lineas_Facturas [linea=" + linea + ", factura=" + factura + ", articulo=" + articulo + ", cantidad="
+		return "Lineas_Facturas [linea=" + linea + ", articulo=" + articulo + ", cantidad="
 				+ cantidad + ", importe=" + importe + "]";
 	}
 }
