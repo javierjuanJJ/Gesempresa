@@ -5,7 +5,8 @@ public class Lineas_Facturas {
 	private Articulos articulo;
 	private int cantidad;
 	private double importe;
-	
+	private double total_importe;
+
 	public Lineas_Facturas(int linea, Articulos articulo, int cantidad, double importe) {
 		this.linea = linea;
 		this.articulo = articulo;
@@ -25,6 +26,10 @@ public class Lineas_Facturas {
 		this.articulo = lineas_factura.getArticulo();
 		this.cantidad = lineas_factura.getCantidad();
 		this.importe = lineas_factura.getImporte();
+	}
+	
+	public double getTotal_importe() {
+		return total_importe;
 	}
 
 	public int getLinea() {
@@ -57,6 +62,10 @@ public class Lineas_Facturas {
 
 	public void setImporte(double importe) {
 		this.importe = importe;
+	}
+	
+	public void set_total_Importe() {
+		this.total_importe = getCantidad() * getImporte();
 	}
 
 	@Override
