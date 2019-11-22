@@ -4,22 +4,23 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlador.ControladorFormularioFacturas">
    <children>
       <AnchorPane prefHeight="631.0" prefWidth="765.0">
          <children>
-            <TableView fx:id="facturas" layoutX="6.0" layoutY="137.0" prefHeight="369.0" prefWidth="479.0" />
+            <TableView fx:id="facturas" layoutX="6.0" layoutY="137.0" onMouseClicked="#poner_datos" prefHeight="369.0" prefWidth="479.0" />
             <Button layoutX="566.0" layoutY="167.0" mnemonicParsing="false" text="Consultar" />
-            <Label layoutX="475.0" layoutY="56.0" text="Facturas disponibles: " />
+            <Label layoutX="445.0" layoutY="57.0" text="Facturas disponibles: " />
             <Label layoutX="484.0" layoutY="275.0" text="Cliente" />
             <Label layoutX="484.0" layoutY="316.0" text="Vendedor" />
-            <Label layoutX="484.0" layoutY="362.0" text="Articulo" />
-            <ComboBox fx:id="ComboBox_Facturas" layoutX="600.0" layoutY="52.0" onAction="#poner_informacion" onMouseClicked="#actualizar" prefWidth="150.0" />
-            <ComboBox layoutX="558.0" layoutY="271.0" prefWidth="150.0" />
-            <ComboBox layoutX="558.0" layoutY="321.0" prefWidth="150.0" />
-            <ComboBox layoutX="580.0" layoutY="367.0" prefWidth="150.0" />
+            <Label layoutX="482.0" layoutY="372.0" text="Articulo" />
+            <ComboBox id="facturas" fx:id="ComboBox_Facturas" layoutX="600.0" layoutY="52.0" onAction="#poner_informacion" onMouseClicked="#actualizar" prefWidth="150.0" />
+            <ComboBox id="clientes" fx:id="cambiar_cliente" layoutX="558.0" layoutY="271.0" onAction="#cambiar_cliente" onMouseClicked="#actualizar_cliente" prefWidth="150.0" />
+            <ComboBox id="vendedores" fx:id="cambiar_vendedor" layoutX="558.0" layoutY="321.0" onAction="#cambiar_vendedor" onMouseClicked="#actualizar_vendedores" prefWidth="150.0" />
+            <ComboBox id="articulos" fx:id="cambiar_articulo" layoutX="558.0" layoutY="367.0" onAction="#cambiar_articulo" onMouseClicked="#actualizar_articulos" prefWidth="150.0" />
             <Label layoutX="20.0" layoutY="21.0" text="FACTURA" />
             <Label layoutX="256.0" layoutY="48.0" text="Nº de factura" />
             <Label fx:id="numero_factura" layoutX="372.0" layoutY="48.0" text="Label" />
@@ -35,6 +36,9 @@
             <Label fx:id="subtotal" layoutX="390.0" layoutY="531.0" text="Label" />
             <Label fx:id="iva" layoutX="390.0" layoutY="561.0" text="Label" />
             <Label fx:id="total_de_la_factura" layoutX="390.0" layoutY="591.0" text="Label" />
+            <Button layoutX="534.0" layoutY="215.0" mnemonicParsing="false" onAction="#Exportar_factura_a_PDF" text="Exportar factura a PDF" />
+            <TextField fx:id="cambiar_cantidad" layoutX="607.0" layoutY="415.0" prefHeight="26.0" prefWidth="39.0" />
+            <Label layoutX="501.0" layoutY="420.0" text="Cantidad" />
          </children>
       </AnchorPane>
    </children>

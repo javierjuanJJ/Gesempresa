@@ -23,12 +23,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.stage.Stage;
 
 public class ControladorFormularioGrupos {
 	
 	private static ArticulosDAO controladorgrupos;
 	static final String GRUPO="Grupo";
-
+	
 	@FXML
 	private TextArea TextField_descripcion;
 	@FXML
