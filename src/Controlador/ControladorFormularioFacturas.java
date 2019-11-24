@@ -1,8 +1,9 @@
 package Controlador;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 import com.itextpdf.text.BaseColor;
@@ -26,9 +27,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -61,9 +64,15 @@ public class ControladorFormularioFacturas {
 
 	@FXML
 	private TableView facturas;
+	
+	@FXML
+	private DatePicker Fecha_factura2;
 
 	@FXML
 	private Label cliente;
+	
+	@FXML
+	private TextField cambiar_cantidad;
 
 	@FXML
 	private Label vendedor;
@@ -84,6 +93,26 @@ public class ControladorFormularioFacturas {
 	private Label total_de_la_factura;
 
 	@FXML
+	private Label Cliente;
+
+	@FXML
+	private Label Vendedor;
+
+	@FXML
+	private Label Articulo;
+
+	@FXML
+	private Label Fecha_factura;
+
+	@FXML
+	private Label Cantidad;
+	
+	@FXML
+	private Button boton_actualizar;
+	
+	
+
+	@FXML
 	public void initialize() {
 
 		try {
@@ -92,17 +121,30 @@ public class ControladorFormularioFacturas {
 			controladorclientes = new ClientesDAO();
 			controladorArticulos = new ArticulosDAO();
 			controladorVendedores = new VendedoresDAO();
-			Lista_de_Facturas = controladorfacturas.findAll();
+			
 			es_admin = (cliente_actual.getNombre().toLowerCase().equals("admin"));
-			Lista_de_Articulos = controladorArticulos.findAll();
-			Lista_de_Vendedores = controladorVendedores.findAll();
-			Lista_de_Clientes = controladorclientes.findAll();
-			if (es_admin) {
-				
-			} else {
+			
+			Cliente.setVisible(es_admin);
+			cambiar_cliente.setVisible(es_admin);
+			Vendedor.setVisible(es_admin);
+			cambiar_vendedor.setVisible(es_admin);
+			Articulo.setVisible(es_admin);
+			Fecha_factura.setVisible(es_admin);
+			Fecha_factura2.setVisible(es_admin);
+			Cantidad.setVisible(es_admin);
+			cambiar_cantidad.setVisible(es_admin);
+			boton_actualizar.setVisible(es_admin);
+			
+			Lista_de_Facturas =  (es_admin)? controladorfacturas.findAll() : controladorfacturas.findAll2(cliente_actual);
 
+		
+			if (!es_admin) {
+				Lista_de_Articulos = controladorArticulos.findAll();
+				Lista_de_Vendedores = controladorVendedores.findAll();
+				Lista_de_Clientes = controladorclientes.findAll();
 			}
-
+		
+		
 		} catch (Exception e) {
 			(new Main()).mensajeExcepcion(e, e.getMessage());
 			Platform.exit();
@@ -110,6 +152,15 @@ public class ControladorFormularioFacturas {
 
 	}
 
+	
+	public void Cambiar_Pantalla(ActionEvent action) throws IOException {
+		String id_boton = "";
+		id_boton = ((Button) action.getSource()).getId();
+		Main main = new Main();
+		main.Cambiar_Pantalla(id_boton);
+	}
+
+	
 	public void actualizar() {
 		
 		ComboBox_Facturas.getItems().clear();
@@ -126,8 +177,8 @@ public class ControladorFormularioFacturas {
 
 	public void actualizar_vendedores() {
 
-		//cambiar_vendedor.getItems().clear();
-		//cambiar_vendedor.getItems().addAll(Lista_de_Vendedores);
+		cambiar_vendedor.getItems().clear();
+		cambiar_vendedor.getItems().addAll(Lista_de_Vendedores);
 
 	}
 
@@ -278,6 +329,9 @@ public class ControladorFormularioFacturas {
 	}
 	
 	public void poner_datos() {
+		
+		contador_modificador= facturas.getSelectionModel().getSelectedIndex();
+		
 		Facturas factura = new Facturas(ComboBox_Facturas.getSelectionModel().getSelectedItem());
 		
 		cambiar_cliente.getItems().clear();
@@ -287,10 +341,22 @@ public class ControladorFormularioFacturas {
 		cambiar_articulo.getItems().clear();
 		cambiar_articulo.getItems().add(((Lineas_Facturas) facturas.getSelectionModel().getSelectedItem()).getArticulo());
 		cambiar_articulo.getSelectionModel().select(0);
-		contador_modificador=facturas.getSelectionModel().getSelectedIndex();
-		//cambiar_vendedor.getItems().clear();
-		//cambiar_vendedor.getItems().add(factura.getVendedor());
-		//cambiar_vendedor.getSelectionModel().select(0);
+		
+		cambiar_vendedor.getItems().clear();
+		cambiar_vendedor.getItems().add(factura.getVendedor());
+		cambiar_vendedor.getSelectionModel().select(0);
+		
+		Lineas_Facturas l= new Lineas_Facturas(factura.getLineas_de_la_factura().get(contador_modificador));
+		this.cambiar_cantidad.setText(l.getCantidad()+"");
+		
+		ZoneId defaultZoneId = ZoneId.systemDefault();
+		
+		//toString() append +8 automatically.
+		java.sql.Date date2 = (java.sql.Date) factura.getFecha();
+		
+		LocalDate date = date2.toLocalDate();
+		
+		this.Fecha_factura2.setValue(date);
 	}
 	
 	public void cambiar_cliente() {
@@ -301,14 +367,92 @@ public class ControladorFormularioFacturas {
 	
 	public void cambiar_vendedor() {
 	
-		this.vendedor.setText(cambiar_vendedor.getSelectionModel().getSelectedItem().toString());
+		vendedor.setText(cambiar_vendedor.getSelectionModel().getSelectedItem().toString());
 	
 	}
 	
 	public void cambiar_articulo() {
+		contador_modificador= facturas.getSelectionModel().getSelectedIndex();
 		Lineas_Facturas l= new Lineas_Facturas(((Lineas_Facturas) facturas.getItems().get(contador_modificador)));
 		l.setArticulo(cambiar_articulo.getSelectionModel().getSelectedItem());
 		facturas.getItems().set(contador_modificador, l);
-		contador_modificador=-1;
+	}
+	
+	public void cambiar_cantidad() {
+		int cantidad=0;
+		contador_modificador= facturas.getSelectionModel().getSelectedIndex();
+		
+		
+		
+		cantidad=Integer.parseInt(cambiar_cantidad.getText());
+		
+		//Lineas_Facturas l= new Lineas_Facturas(factura.getLineas_de_la_factura().get(contador_modificador));
+		//l.setCantidad(cantidad);
+		
+		//facturas.getItems().set(contador_modificador, l);
+	
+	}
+	
+	public void actualizar_linea() {
+		int cantidad=0;
+		
+		Facturas factura = new Facturas(ComboBox_Facturas.getSelectionModel().getSelectedItem());
+	
+		cantidad=Integer.parseInt(cambiar_cantidad.getText());
+		
+		Lineas_Facturas l2= factura.getLineas_de_la_factura().get(contador_modificador);
+		l2.setArticulo(cambiar_articulo.getSelectionModel().getSelectedItem());
+		
+		l2.setCantidad(cantidad);
+		l2.set_total_Importe();
+		facturas.getItems().set(contador_modificador, l2);
+		double precio_total=0.0;
+		facturas.getSelectionModel().select(contador_modificador);
+		
+		Lineas_Facturas l= new Lineas_Facturas(factura.getLineas_de_la_factura().get(contador_modificador));
+		
+		
+		for (int contador = 0; contador < factura.getLineas_de_la_factura().size(); contador++) {
+			l=new Lineas_Facturas(factura.getLineas_de_la_factura().get(contador));
+			
+			if (!l.equals(l2)) {
+				l.set_total_Importe();
+				precio_total += l.getTotal_importe();
+			}
+		}
+		precio_total += l2.getTotal_importe();
+		
+		LocalDate dateToConvert=Fecha_factura2.getValue();
+		java.sql.Date fecha_sql=java.sql.Date.valueOf(dateToConvert);
+		java.util.Date fecha_util=(java.util.Date) fecha_sql;
+		
+		factura.setFecha(fecha_util);
+		
+		fecha_factura.setText(fecha_util.toString());
+		
+		factura.setCliente(new Clientes(cambiar_cliente.getSelectionModel().getSelectedItem()));
+		factura.setVendedor(new Vendedores(cambiar_vendedor.getSelectionModel().getSelectedItem()));
+		
+		cliente.setText(factura.getCliente().toString());
+		vendedor.setText(factura.getVendedor().toString());
+		
+		subtotal.setText(String.valueOf(precio_total));
+		double precio_iva = (precio_total * 21) / 100;
+		iva.setText(String.valueOf(precio_iva));
+		total_de_la_factura.setText(String.valueOf(precio_iva + precio_total));
+		
+		try {
+
+			if (controladorfacturas.update(factura)) {
+				System.out.println("Hecho");
+			}
+			else {
+				System.out.println("No Hecho");
+			}
+			
+		} catch (Exception e) {
+			
+		}
+		
 	}
 }

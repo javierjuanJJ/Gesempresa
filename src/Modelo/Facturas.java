@@ -1,6 +1,6 @@
 package Modelo;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.ArrayList;
 
 public class Facturas {
@@ -9,6 +9,7 @@ public class Facturas {
 	private Clientes cliente;
 	private Vendedores vendedor;
 	private String forma_de_pago;
+	private double Total;
 	private ArrayList<Lineas_Facturas> lineas_de_la_factura;
 	
 	public Facturas(int id, Date fecha, Clientes cliente, Vendedores vendedor,
@@ -20,8 +21,20 @@ public class Facturas {
 		this.vendedor = vendedor;
 		this.lineas_de_la_factura = lineas_de_la_factura;
 		this.forma_de_pago = forma_de_pago;
+		Total=calcular_total_factura();
 	}
-	
+	public Facturas(int id, Date fecha, Clientes cliente, Vendedores vendedor,
+			ArrayList<Lineas_Facturas> lineas_de_la_factura,String forma_de_pago,double total) {
+		
+		this.id = id;
+		this.fecha = fecha;
+		this.cliente = cliente;
+		this.vendedor = vendedor;
+		this.lineas_de_la_factura = lineas_de_la_factura;
+		this.forma_de_pago = forma_de_pago;
+		this.Total=total;
+	}
+
 	public Facturas() {
 		
 		this.id = 0;
@@ -30,6 +43,7 @@ public class Facturas {
 		this.vendedor = new Vendedores();
 		this.lineas_de_la_factura = new ArrayList();
 		this.forma_de_pago = "";
+		Total=0;
 	}
 	
 	public Facturas(Facturas factura) {
@@ -40,6 +54,7 @@ public class Facturas {
 		this.vendedor = factura.getVendedor();
 		this.lineas_de_la_factura = factura.getLineas_de_la_factura();
 		this.forma_de_pago = factura.getForma_de_pago();
+		this.Total= factura.getTotal();
 	}
 
 	public int getId() {
@@ -61,6 +76,11 @@ public class Facturas {
 	public Clientes getCliente() {
 		return cliente;
 	}
+	
+	public double getTotal() {
+		return Total;
+	}
+	
 	public String getForma_de_pago() {
 		return this.forma_de_pago;
 	}
@@ -87,6 +107,18 @@ public class Facturas {
 	public void setLineas_de_la_factura(ArrayList<Lineas_Facturas> lineas_de_la_factura) {
 		this.lineas_de_la_factura = lineas_de_la_factura;
 	}
+	
+	public double calcular_total_factura() {
+		double total=0.0;
+		
+		for (int contador=0;contador<getLineas_de_la_factura().size();contador++) {
+			getLineas_de_la_factura().get(contador).set_total_Importe();
+			total += getLineas_de_la_factura().get(contador).getTotal_importe();
+		}
+		this.Total=total;
+		return total;
+	}
+	
 	@Override
 	public String toString() {
 		

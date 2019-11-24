@@ -63,7 +63,7 @@ public class Vendedores {
 
 	@Override
 	public String toString() {
-		return "Vendedores [id=" + id + ", fecha_ingreso=" + fecha_ingreso + ", nombre =" + nombre + ", salario=" + salario + "]";
+		return getNombre();
 	}
 
 }

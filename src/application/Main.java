@@ -80,6 +80,10 @@ public class Main extends Application {
 			archivo.append("Facturas");
 			icono.append("principio.png");
 			break;
+		case "Pantalla_Consultas":
+			archivo.append("Consultas");
+			icono.append("principio.png");
+			break;
 		default:
 			break;
 		}
