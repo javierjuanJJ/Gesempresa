@@ -1,6 +1,7 @@
 package Controlador;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -90,6 +91,8 @@ public class ControladorFormularioConsultas {
 			es_admin = (cliente_actual.getNombre().toLowerCase().equals("admin"));
 			Lista_de_Facturas = (es_admin) ? controladorfacturas.findAll()
 					: controladorfacturas.findAll2(cliente_actual);
+			
+			iniciar_datos();
 
 		} catch (Exception e) {
 			(new Main()).mensajeExcepcion(e, e.getMessage());
@@ -159,6 +162,7 @@ public class ControladorFormularioConsultas {
 		
 		tabla_consulta2.getItems().clear();
 		tabla_consulta2.getColumns().clear();
+		
 		List<Facturas> Facturas_recibidas = null;
 		Facturas_recibidas = new ArrayList<Facturas>();
 
@@ -183,16 +187,22 @@ public class ControladorFormularioConsultas {
 				+ this.checkbox_vendedor_hasta.getSelectionModel().getSelectedItem().getId() + " ) " : "";
 
 		query.append(part);
+		
+		LocalDate dateToConvert=this.combobox_fecha_desde.getValue();
+		java.sql.Date fecha_sql=java.sql.Date.valueOf(dateToConvert);
+		
+		LocalDate dateToConvert2=this.combobox_fecha_desde.getValue();
+		java.sql.Date fecha_sql2=java.sql.Date.valueOf(dateToConvert2);
 
 		part = (checkbox_fecha.isSelected())
-				? "and (facturas.fecha >= " + this.combobox_fecha_desde.getValue().toString()
-						+ " and facturas.fecha <= " + this.checkbox_fecha_hasta.toString() + " ) "
+				? "and (facturas.fecha >= " + fecha_sql.toString()
+						+ " and facturas.fecha <= " + fecha_sql2.toString() + " ) "
 				: "";
 
 		query.append(part);
 
-		int numero_desde = 0;
-		int numero_hasta = 0;
+		double numero_desde = 0.0;
+		double numero_hasta = 0.0;
 
 		TableColumn<String, Facturas> id = new TableColumn<>("id");
 		id.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -225,8 +235,8 @@ public class ControladorFormularioConsultas {
 			System.out.println(query);
 			boolean cantidad=this.checkbox_cantidad.isSelected();
 			if (cantidad) {
-				numero_desde = Integer.parseInt(combobox_cantidad_desde.getText());
-				numero_hasta = Integer.parseInt(checkbox_cantidad_hasta.getText());
+				numero_desde = Double.parseDouble(combobox_cantidad_desde.getText());
+				numero_hasta = Double.parseDouble(checkbox_cantidad_hasta.getText());
 				for (int contador = 0; contador < Facturas_recibidas.size(); contador++) {
 					Facturas factura = new Facturas(Facturas_recibidas.get(contador));
 					factura.calcular_total_factura();
@@ -253,6 +263,48 @@ public class ControladorFormularioConsultas {
 			e.printStackTrace();
 		}
 
+	}
+	
+	public void iniciar_datos() {
+		Facturas factura_del_principio=null;
+		Facturas factura_del_final=null;
+
+		String principio_sql="SELECT * FROM v_empresa_ad_p1.facturas, v_empresa_ad_p1.clientes , v_empresa_ad_p1.vendedores WHERE facturas.cliente=clientes.id AND facturas.vendedor=vendedores.id ";
+		StringBuilder query_principio = new StringBuilder(principio_sql);
+		StringBuilder query_final = new StringBuilder(principio_sql);
+		String modificador_sql_max="MAX";
+		String modificador_sql_min="MIN";
+		query_principio.append("AND facturas.id=(SELECT " + modificador_sql_min + "(v_empresa_ad_p1.facturas.id) FROM v_empresa_ad_p1.facturas);");
+		query_final.append("AND facturas.id=(SELECT " + modificador_sql_max + "(v_empresa_ad_p1.facturas.id) FROM v_empresa_ad_p1.facturas);");
+		try {
+			factura_del_principio=new Facturas(controladorfacturas.findBySQL(query_principio.toString()).get(0));
+			factura_del_final=new Facturas(controladorfacturas.findBySQL(query_final.toString()).get(0));
+		} catch (Exception e) {
+			
+		}
+		this.combobox_cantidad_desde.setText(factura_del_principio.calcular_total_factura()+"");
+		this.checkbox_cantidad_hasta.setText(factura_del_final.calcular_total_factura()+"");
+		this.combobox_factura_desde.getSelectionModel().select(factura_del_principio);
+		this.checkbox_factura_hasta.getSelectionModel().select(factura_del_final);
+		this.combobox_cliente_desde.getSelectionModel().select(factura_del_principio.getCliente());
+		this.checkbox_cliente_hasta.getSelectionModel().select(factura_del_final.getCliente());
+		this.combobox_vendedor_desde.getSelectionModel().select(factura_del_principio.getVendedor());
+		this.checkbox_vendedor_hasta.getSelectionModel().select(factura_del_final.getVendedor());
+		
+		java.sql.Date date2 = (java.sql.Date) factura_del_principio.getFecha();
+		
+		LocalDate date = date2.toLocalDate();
+		
+		this.combobox_fecha_desde.setValue(date);
+		
+		
+		
+		java.sql.Date date1 = (java.sql.Date) factura_del_final.getFecha();
+		
+		LocalDate date3 = date1.toLocalDate();
+		
+		this.checkbox_fecha_hasta.setValue(date3);
+		
 	}
 
 }

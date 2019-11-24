@@ -27,7 +27,7 @@
             <TextField fx:id="checkbox_cantidad_hasta" layoutX="484.0" layoutY="219.0" />
             <TableView fx:id="tabla_consulta" layoutX="9.0" layoutY="336.0" prefHeight="273.0" prefWidth="250.0" />
             <Button fx:id="boton_consultar" layoutX="272.0" layoutY="267.0" mnemonicParsing="false" onAction="#consultar" text="Consultar" />
-            <Button fx:id="boton_reiniciar_por_defecto" layoutX="456.0" layoutY="267.0" mnemonicParsing="false" text="Reiniciar por defecto" />
+            <Button fx:id="boton_reiniciar_por_defecto" layoutX="456.0" layoutY="267.0" mnemonicParsing="false" onAction="#iniciar_datos" text="Reiniciar por defecto" />
             <CheckBox fx:id="checkbox_factura" layoutX="162.0" layoutY="75.0" mnemonicParsing="false" />
             <CheckBox fx:id="checkbox_fecha" layoutX="162.0" layoutY="119.0" mnemonicParsing="false" />
             <CheckBox fx:id="checkbox_cliente" layoutX="168.0" layoutY="152.0" mnemonicParsing="false" />
