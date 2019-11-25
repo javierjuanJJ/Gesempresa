@@ -12,8 +12,8 @@
             <Label layoutX="10.0" layoutY="21.0" prefHeight="33.0" prefWidth="740.0" text="Criterios de busqueda" />
             <Label layoutX="29.0" layoutY="83.0" text="Desde / hasta factura" />
             <Label layoutX="29.0" layoutY="120.0" text="Desde / hasta fecha" />
-            <Label layoutX="29.0" layoutY="158.0" text="Desde / hasta cliente" />
-            <Label layoutX="29.0" layoutY="195.0" text="Desde / hasta vendedor" />
+            <Label fx:id="cliente" layoutX="29.0" layoutY="158.0" text="Desde / hasta cliente" />
+            <Label fx:id="vendedor" layoutX="29.0" layoutY="195.0" text="Desde / hasta vendedor" />
             <Label layoutX="15.0" layoutY="223.0" text="Desde / hasta total factura" />
             <ComboBox fx:id="combobox_factura_desde" layoutX="208.0" layoutY="71.0" onMouseClicked="#actualizar_facturas" prefWidth="150.0" />
             <ComboBox fx:id="checkbox_factura_hasta" layoutX="432.0" layoutY="71.0" onMouseClicked="#actualizar_facturas2" prefWidth="150.0" />
