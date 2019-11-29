@@ -177,17 +177,11 @@ public class FacturasDAO implements GenericoDAO<Facturas> {
         String usr = "root";
         String pw = "1234";
 		
-		try (JdbcRowSet resultset = RowSetProvider.newFactory().createJdbcRowSet();
-				JdbcRowSet resultset_lineas = RowSetProvider.newFactory().createJdbcRowSet()) {            
+		try (JdbcRowSet resultset = RowSetProvider.newFactory().createJdbcRowSet();) {            
 			
 			resultset.setUrl(jdbcUrl);
 			resultset.setUsername(usr);
 			resultset.setPassword(pw);
-            
-			resultset_lineas.setUrl(jdbcUrl);
-			resultset_lineas.setUsername(usr);
-			resultset_lineas.setPassword(pw);
-			
 			
 			// Consultas            
 			resultset.setCommand(sqlselect);           
@@ -212,33 +206,7 @@ public class FacturasDAO implements GenericoDAO<Facturas> {
 				factura.getVendedor().setNombre(resultset.getString(11));
 				factura.getVendedor().setFecha_ingreso(resultset.getDate(12));
 				factura.getVendedor().setSalario(resultset.getDouble(13));
-				
-				// Consultas            
-				resultset_lineas.setCommand(sql_Lineas_factura);           
-				resultset_lineas.setInt(1, factura.getId());
-				resultset_lineas.execute();
-				
-				
-				while(resultset_lineas.next()) {
-					
-					Lineas_Facturas linea_factura=new Lineas_Facturas();
-					
-					linea_factura.setLinea(resultset_lineas.getInt(1));
-					linea_factura.setImporte(resultset_lineas.getDouble(5));
-					linea_factura.setCantidad(resultset_lineas.getInt(4));
-					linea_factura.setArticulo(new Articulos());
-					
-					linea_factura.getArticulo().setId(resultset_lineas.getInt(6));
-					linea_factura.getArticulo().setNombre(resultset_lineas.getString(7));
-					linea_factura.getArticulo().setPrecio(resultset_lineas.getDouble(8));
-					linea_factura.getArticulo().setStock(resultset_lineas.getInt(11));
-					linea_factura.getArticulo().setCodigo(resultset_lineas.getString(9));
-					linea_factura.getArticulo().setGrupo(resultset_lineas.getInt(10));
-					
-					factura.getLineas_de_la_factura().add(linea_factura);
-					
-				}
-				Facturas_recibidas.add(factura);
+			
 			}
             
         } catch (SQLException se) {
