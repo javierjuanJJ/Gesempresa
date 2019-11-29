@@ -31,10 +31,6 @@ public class ControladorFormularioConsultas {
 	@FXML
 	private TableView tabla_consulta;
 	@FXML
-	private TableView tabla_consulta1;
-	@FXML
-	private TableView tabla_consulta2;
-	@FXML
 	private Button boton_consultar;
 	@FXML
 	private Button boton_reiniciar_por_defecto;
@@ -104,8 +100,6 @@ public class ControladorFormularioConsultas {
 			this.checkbox_vendedor_hasta.setVisible(es_admin);
 			cliente.setVisible(es_admin);
 			vendedor.setVisible(es_admin);
-			tabla_consulta1.setVisible(es_admin);
-			tabla_consulta2.setVisible(es_admin);
 
 			iniciar_datos();
 
@@ -176,12 +170,6 @@ public class ControladorFormularioConsultas {
 			tabla_consulta.getItems().clear();
 			tabla_consulta.getColumns().clear();
 
-			tabla_consulta1.getItems().clear();
-			tabla_consulta1.getColumns().clear();
-
-			tabla_consulta2.getItems().clear();
-			tabla_consulta2.getColumns().clear();
-
 			List<Facturas> Facturas_recibidas = null;
 			Facturas_recibidas = new ArrayList<Facturas>();
 			String campos_otros_admin="v_empresa_ad_p1.facturas.id as id, v_empresa_ad_p1.facturas.fecha as fecha, '' as total";
@@ -230,13 +218,56 @@ public class ControladorFormularioConsultas {
 			Facturas_recibidas.addAll(controladorfacturas.findBySQL(query.toString()));
 			
 			if (es_admin) {
-				for (int contador=0; contador<campos.size(); contador++ ) {
+				for (int contador=0; contador<3; contador++ ) {
 					tabla_consulta.getColumns().add(new TableColumn<Facturas,String>(campos.get(contador).toString()));
+				}
+				
+				for (int contador=0; contador<2; contador++ ) {
+					tabla_consulta.getColumns().add(new TableColumn<Vendedores,String>(campos.get(contador + 3).toString()));
+				}
+				
+				for (int contador=0; contador<2; contador++ ) {
+					tabla_consulta.getColumns().add(new TableColumn<Clientes,String>(campos.get(contador + 5).toString()));
 				}
 				
 				((TableColumn<Facturas, String>) tabla_consulta.getColumns().get(0)).setCellValueFactory(new PropertyValueFactory<>("id"));
 				((TableColumn<Facturas, String>) tabla_consulta.getColumns().get(1)).setCellValueFactory(new PropertyValueFactory<>("fecha"));
 				((TableColumn<Facturas, String>) tabla_consulta.getColumns().get(2)).setCellValueFactory(new PropertyValueFactory<>("Total"));
+				
+				((TableColumn<Clientes, String>) tabla_consulta.getColumns().get(3)).setCellValueFactory(new PropertyValueFactory<>("id"));
+				((TableColumn<Clientes, String>) tabla_consulta.getColumns().get(4)).setCellValueFactory(new PropertyValueFactory<>("nombre"));
+				
+				((TableColumn<Vendedores, String>) tabla_consulta.getColumns().get(5)).setCellValueFactory(new PropertyValueFactory<>("id"));
+				((TableColumn<Vendedores, String>) tabla_consulta.getColumns().get(6)).setCellValueFactory(new PropertyValueFactory<>("nombre"));
+			
+			
+				boolean cantidad = this.checkbox_cantidad.isSelected();
+				if (cantidad) {
+					numero_desde = Double.parseDouble(combobox_cantidad_desde.getText());
+					numero_hasta = Double.parseDouble(checkbox_cantidad_hasta.getText());
+					for (int contador = 0; contador < Facturas_recibidas.size(); contador++) {
+						Facturas factura = new Facturas(Facturas_recibidas.get(contador));
+						factura.calcular_total_factura();
+						if (((factura.getTotal() >= numero_desde) && (factura.getTotal() <= numero_hasta))) {
+							tabla_consulta.getItems().add(contador,factura);
+							tabla_consulta.getItems().add(contador,factura.getCliente());
+							tabla_consulta.getItems().add(contador,factura.getVendedor());
+							System.out.println(factura.getId()+" "+factura.getFecha().toString()+" "+factura.getTotal()+"");
+						}
+					}
+				} else {
+					for (int contador = 0; contador < Facturas_recibidas.size(); contador++) {
+						Facturas factura = new Facturas(Facturas_recibidas.get(contador));
+						factura.calcular_total_factura();
+						tabla_consulta.getItems().add(contador,factura);
+						tabla_consulta.getItems().add(contador,factura.getCliente());
+						tabla_consulta.getItems().add(contador,factura.getVendedor());
+						System.out.println(factura.getId()+" "+factura.getFecha().toString()+" "+factura.getTotal()+"");}
+				}
+			
+			
+			
+			
 			}
 			else {
 				for (int contador=0; contador<3; contador++ ) {

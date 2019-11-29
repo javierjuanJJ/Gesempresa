@@ -29,7 +29,7 @@
             <ComboBox fx:id="checkbox_vendedor_hasta" layoutX="483.0" layoutY="191.0" onMouseClicked="#actualizar_vendedor2" prefWidth="150.0" />
             <TextField fx:id="combobox_cantidad_desde" layoutX="231.0" layoutY="219.0" />
             <TextField fx:id="checkbox_cantidad_hasta" layoutX="484.0" layoutY="219.0" />
-            <TableView fx:id="tabla_consulta" layoutX="9.0" layoutY="336.0" prefHeight="273.0" prefWidth="748.0" />
+            <TableView fx:id="tabla_consulta" layoutX="9.0" layoutY="336.0" prefHeight="273.0" prefWidth="740.0" />
             <Button fx:id="boton_consultar" layoutX="272.0" layoutY="267.0" mnemonicParsing="false" onAction="#consultar" text="Consultar" />
             <Button fx:id="boton_reiniciar_por_defecto" layoutX="456.0" layoutY="267.0" mnemonicParsing="false" onAction="#iniciar_datos" text="Reiniciar por defecto" />
             <CheckBox fx:id="checkbox_factura" layoutX="162.0" layoutY="75.0" mnemonicParsing="false" />
@@ -37,8 +37,6 @@
             <CheckBox fx:id="checkbox_cliente" layoutX="168.0" layoutY="152.0" mnemonicParsing="false" />
             <CheckBox fx:id="checkbox_vendedor" layoutX="168.0" layoutY="193.0" mnemonicParsing="false" />
             <CheckBox fx:id="checkbox_cantidad" layoutX="166.0" layoutY="223.0" mnemonicParsing="false" />
-            <TableView fx:id="tabla_consulta1" layoutX="256.0" layoutY="336.0" prefHeight="273.0" prefWidth="239.0" visible="false" />
-            <TableView fx:id="tabla_consulta2" layoutX="496.0" layoutY="336.0" prefHeight="273.0" prefWidth="262.0" visible="false" />
          </children>
       </AnchorPane>
    </children>

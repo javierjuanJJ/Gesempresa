@@ -252,17 +252,12 @@ public class FacturasDAO implements GenericoDAO<Facturas> {
 					factura.setFecha(resultset.getDate(2));
 					factura.setCliente(new Clientes());
 					factura.setVendedor(new Vendedores());
-					factura.setForma_de_pago(resultset.getString(5));
 					
-					factura.getCliente().setId(resultset.getInt(6));
-					factura.getCliente().setNombre(resultset.getString(7));
-					factura.getCliente().setDireccion(resultset.getString(8));
-					factura.getCliente().setpasswd(resultset.getString(9));
+					factura.getCliente().setId(resultset.getInt(4));
+					factura.getCliente().setNombre(resultset.getString(5));
 					
-					factura.getVendedor().setId(resultset.getInt(10));
-					factura.getVendedor().setNombre(resultset.getString(11));
-					factura.getVendedor().setFecha_ingreso(resultset.getDate(12));
-					factura.getVendedor().setSalario(resultset.getDouble(13));
+					factura.getVendedor().setId(resultset.getInt(6));
+					factura.getVendedor().setNombre(resultset.getString(7));
 					
 					
 					
@@ -308,6 +303,7 @@ public class FacturasDAO implements GenericoDAO<Facturas> {
             
         } catch (SQLException se) {
             System.err.println(se.getMessage());
+            se.printStackTrace();
         } 
 		
 		
