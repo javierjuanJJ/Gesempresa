@@ -3,6 +3,7 @@ package Controlador;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -183,9 +184,9 @@ public class ControladorFormularioConsultas {
 
 			List<Facturas> Facturas_recibidas = null;
 			Facturas_recibidas = new ArrayList<Facturas>();
-
-			query.append(
-					"SELECT * FROM v_empresa_ad_p1.facturas, v_empresa_ad_p1.clientes , v_empresa_ad_p1.vendedores WHERE facturas.cliente=clientes.id AND facturas.vendedor=vendedores.id ");
+			String campos_otros_admin="v_empresa_ad_p1.facturas.id as id, v_empresa_ad_p1.facturas.fecha as fecha, '' as total";
+			String campos_admin="v_empresa_ad_p1.facturas.id as id, v_empresa_ad_p1.facturas.fecha as fecha, '' as total, v_empresa_ad_p1.clientes.id as cliente, v_empresa_ad_p1.clientes.nombre as nombre, v_empresa_ad_p1.vendedores.id as vendedor, v_empresa_ad_p1.vendedores.nombre as nombre";
+			query.append("SELECT " + ((es_admin)? campos_admin: campos_otros_admin) + " FROM v_empresa_ad_p1.facturas, v_empresa_ad_p1.clientes , v_empresa_ad_p1.vendedores WHERE facturas.cliente=clientes.id AND facturas.vendedor=vendedores.id ");
 
 			part = (checkbox_factura.isSelected()) ? "and (facturas.id >= "
 					+ this.combobox_factura_desde.getSelectionModel().getSelectedItem().getId() + " and facturas.id <= "
@@ -224,8 +225,53 @@ public class ControladorFormularioConsultas {
 
 			double numero_desde = 0.0;
 			double numero_hasta = 0.0;
+			ArrayList campos=controladorfacturas.campos;
+			
+			Facturas_recibidas.addAll(controladorfacturas.findBySQL(query.toString()));
+			
+			if (es_admin) {
+				for (int contador=0; contador<campos.size(); contador++ ) {
+					tabla_consulta.getColumns().add(new TableColumn<Facturas,String>(campos.get(contador).toString()));
+				}
+				
+				((TableColumn<Facturas, String>) tabla_consulta.getColumns().get(0)).setCellValueFactory(new PropertyValueFactory<>("id"));
+				((TableColumn<Facturas, String>) tabla_consulta.getColumns().get(1)).setCellValueFactory(new PropertyValueFactory<>("fecha"));
+				((TableColumn<Facturas, String>) tabla_consulta.getColumns().get(2)).setCellValueFactory(new PropertyValueFactory<>("Total"));
+			}
+			else {
+				for (int contador=0; contador<3; contador++ ) {
+					tabla_consulta.getColumns().add(new TableColumn<String,String>(campos.get(contador).toString()));
+				}
+				
+				((TableColumn<Facturas, String>) tabla_consulta.getColumns().get(0)).setCellValueFactory(new PropertyValueFactory<>("id"));
+				((TableColumn<Facturas, String>) tabla_consulta.getColumns().get(1)).setCellValueFactory(new PropertyValueFactory<>("fecha"));
+				((TableColumn<Facturas, String>) tabla_consulta.getColumns().get(2)).setCellValueFactory(new PropertyValueFactory<>("Total"));
+			
+				
+				boolean cantidad = this.checkbox_cantidad.isSelected();
+				if (cantidad) {
+					numero_desde = Double.parseDouble(combobox_cantidad_desde.getText());
+					numero_hasta = Double.parseDouble(checkbox_cantidad_hasta.getText());
+					for (int contador = 0; contador < Facturas_recibidas.size(); contador++) {
+						Facturas factura = new Facturas(Facturas_recibidas.get(contador));
+						factura.calcular_total_factura();
+						if (((factura.getTotal() >= numero_desde) && (factura.getTotal() <= numero_hasta))) {
+							tabla_consulta.getItems().add(factura);
+							System.out.println(factura.getId()+" "+factura.getFecha().toString()+" "+factura.getTotal()+"");
+						}
+					}
+				} else {
+					for (int contador = 0; contador < Facturas_recibidas.size(); contador++) {
+						Facturas factura = new Facturas(Facturas_recibidas.get(contador));
+						factura.calcular_total_factura();
+						tabla_consulta.getItems().add(factura);
+						System.out.println(factura.getId()+" "+factura.getFecha().toString()+" "+factura.getTotal()+"");}
+				}
+			}
+			
+			
 
-			TableColumn<String, Facturas> id = new TableColumn<>("id");
+			/*TableColumn<String, Facturas> id = new TableColumn<>("id");
 			id.setCellValueFactory(new PropertyValueFactory<>("id"));
 
 			TableColumn<Date, Facturas> fecha = new TableColumn<>("fecha");
@@ -274,7 +320,7 @@ public class ControladorFormularioConsultas {
 					tabla_consulta2.getItems().add(factura.getCliente());
 				}
 			}
-
+*/
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -288,7 +334,14 @@ public class ControladorFormularioConsultas {
 			Facturas factura_del_principio = null;
 			Facturas factura_del_final = null;
 
-			String principio_sql = "SELECT * FROM v_empresa_ad_p1.facturas, "
+			String campos_otros_admin="v_empresa_ad_p1.facturas.id as id, v_empresa_ad_p1.facturas.fecha as fecha, '' as total";
+			String campos_admin="v_empresa_ad_p1.facturas.id as id, v_empresa_ad_p1.facturas.fecha as fecha, '' as total, v_empresa_ad_p1.clientes.id as cliente, v_empresa_ad_p1.clientes.nombre as nombre, v_empresa_ad_p1.vendedores.id as vendedor, v_empresa_ad_p1.vendedores.nombre as nombre";
+			
+			
+			
+			String principio_sql = "SELECT "
+					+ ((es_admin)? campos_admin: campos_otros_admin)
+					+ " FROM v_empresa_ad_p1.facturas, "
 					+ "v_empresa_ad_p1.clientes , "
 					+ "v_empresa_ad_p1.vendedores "
 					+ "WHERE facturas.cliente=clientes.id "

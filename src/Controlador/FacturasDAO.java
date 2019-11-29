@@ -3,6 +3,7 @@ package Controlador;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ public class FacturasDAO implements GenericoDAO<Facturas> {
 	protected static final String sql_actualizar_linea_factura = "UPDATE v_empresa_ad_p1.lineas_factura SET articulo=?,importe=?,cantidad=? WHERE linea=? AND factura=?;";
 	
 	public static PreparedStatement preparedstatement = null;
+	public static ArrayList<String> campos = null;
 	
 	public FacturasDAO() {
 		try {
@@ -176,38 +178,133 @@ public class FacturasDAO implements GenericoDAO<Facturas> {
 		String jdbcUrl = "jdbc:mysql://127.0.0.1:3306/v_empresa_ad_p1?serverTimezone=" + TimeZone.getDefault().getID();
         String usr = "root";
         String pw = "1234";
-		
-		try (JdbcRowSet resultset = RowSetProvider.newFactory().createJdbcRowSet();) {            
+        campos = new ArrayList();
+		try (JdbcRowSet resultset = RowSetProvider.newFactory().createJdbcRowSet();
+				
+				JdbcRowSet resultset_lineas = RowSetProvider.newFactory().createJdbcRowSet();) {            
 			
 			resultset.setUrl(jdbcUrl);
 			resultset.setUsername(usr);
 			resultset.setPassword(pw);
 			
+			
+			resultset_lineas.setUrl(jdbcUrl);
+			resultset_lineas.setUsername(usr);
+			resultset_lineas.setPassword(pw);
+			
 			// Consultas            
 			resultset.setCommand(sqlselect);           
 			resultset.execute();
 			
-			while (resultset.next()) {
-				
-				factura=new Facturas();
-				
-				factura.setId(resultset.getInt(1));
-				factura.setFecha(resultset.getDate(2));
-				factura.setCliente(new Clientes());
-				factura.setVendedor(new Vendedores());
-				factura.setForma_de_pago(resultset.getString(5));
-				
-				factura.getCliente().setId(resultset.getInt(6));
-				factura.getCliente().setNombre(resultset.getString(7));
-				factura.getCliente().setDireccion(resultset.getString(8));
-				factura.getCliente().setpasswd(resultset.getString(9));
-				
-				factura.getVendedor().setId(resultset.getInt(10));
-				factura.getVendedor().setNombre(resultset.getString(11));
-				factura.getVendedor().setFecha_ingreso(resultset.getDate(12));
-				factura.getVendedor().setSalario(resultset.getDouble(13));
+			ResultSetMetaData rsmd = resultset.getMetaData();
 			
+			int columnas=rsmd.getColumnCount();
+			for (int cont = 1; cont <= columnas; cont++) {
+				campos.add(rsmd.getColumnName(cont));
 			}
+			boolean mas_de_3=(columnas==3);
+			
+			if (mas_de_3) {
+				while (resultset.next()) {
+					
+					factura=new Facturas();
+					
+					factura.setId(resultset.getInt(1));
+					factura.setFecha(resultset.getDate(2));
+					
+					// Consultas            
+					resultset_lineas.setCommand(sql_Lineas_factura); 
+					resultset_lineas.setInt(1, factura.getId());
+					resultset_lineas.execute();
+					
+					while(resultset_lineas.next()) {
+						
+						Lineas_Facturas linea_factura=new Lineas_Facturas();
+						
+						linea_factura.setLinea(resultset_lineas.getInt(1));
+						linea_factura.setImporte(resultset_lineas.getDouble(5));
+						linea_factura.setCantidad(resultset_lineas.getInt(4));
+						linea_factura.setArticulo(new Articulos());
+						
+						linea_factura.getArticulo().setId(resultset_lineas.getInt(6));
+						linea_factura.getArticulo().setNombre(resultset_lineas.getString(7));
+						linea_factura.getArticulo().setPrecio(resultset_lineas.getDouble(8));
+						linea_factura.getArticulo().setStock(resultset_lineas.getInt(11));
+						linea_factura.getArticulo().setCodigo(resultset_lineas.getString(9));
+						linea_factura.getArticulo().setGrupo(resultset_lineas.getInt(10));
+						
+						factura.getLineas_de_la_factura().add(linea_factura);
+						
+					}
+					
+					
+					Facturas_recibidas.add(factura);
+				}
+				
+				
+			}
+			else {
+				while (resultset.next()) {
+					
+					factura=new Facturas();
+					
+					factura.setId(resultset.getInt(1));
+					factura.setFecha(resultset.getDate(2));
+					factura.setCliente(new Clientes());
+					factura.setVendedor(new Vendedores());
+					factura.setForma_de_pago(resultset.getString(5));
+					
+					factura.getCliente().setId(resultset.getInt(6));
+					factura.getCliente().setNombre(resultset.getString(7));
+					factura.getCliente().setDireccion(resultset.getString(8));
+					factura.getCliente().setpasswd(resultset.getString(9));
+					
+					factura.getVendedor().setId(resultset.getInt(10));
+					factura.getVendedor().setNombre(resultset.getString(11));
+					factura.getVendedor().setFecha_ingreso(resultset.getDate(12));
+					factura.getVendedor().setSalario(resultset.getDouble(13));
+					
+					
+					
+					// Consultas            
+					resultset_lineas.setCommand(sql_Lineas_factura); 
+					resultset_lineas.setInt(1, factura.getId());
+					resultset_lineas.execute();
+					
+					while(resultset_lineas.next()) {
+						
+						Lineas_Facturas linea_factura=new Lineas_Facturas();
+						
+						linea_factura.setLinea(resultset_lineas.getInt(1));
+						linea_factura.setImporte(resultset_lineas.getDouble(5));
+						linea_factura.setCantidad(resultset_lineas.getInt(4));
+						linea_factura.setArticulo(new Articulos());
+						
+						linea_factura.getArticulo().setId(resultset_lineas.getInt(6));
+						linea_factura.getArticulo().setNombre(resultset_lineas.getString(7));
+						linea_factura.getArticulo().setPrecio(resultset_lineas.getDouble(8));
+						linea_factura.getArticulo().setStock(resultset_lineas.getInt(11));
+						linea_factura.getArticulo().setCodigo(resultset_lineas.getString(9));
+						linea_factura.getArticulo().setGrupo(resultset_lineas.getInt(10));
+						
+						factura.getLineas_de_la_factura().add(linea_factura);
+						
+					}
+
+					
+					
+					
+					
+					Facturas_recibidas.add(factura);
+					
+					
+					
+					
+					
+				}
+			}
+			
+			
             
         } catch (SQLException se) {
             System.err.println(se.getMessage());
