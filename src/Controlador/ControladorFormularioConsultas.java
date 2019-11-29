@@ -288,19 +288,36 @@ public class ControladorFormularioConsultas {
 			Facturas factura_del_principio = null;
 			Facturas factura_del_final = null;
 
-			String principio_sql = "SELECT * FROM v_empresa_ad_p1.facturas, v_empresa_ad_p1.clientes , v_empresa_ad_p1.vendedores WHERE facturas.cliente=clientes.id AND facturas.vendedor=vendedores.id ";
+			String principio_sql = "SELECT * FROM v_empresa_ad_p1.facturas, "
+					+ "v_empresa_ad_p1.clientes , "
+					+ "v_empresa_ad_p1.vendedores "
+					+ "WHERE facturas.cliente=clientes.id "
+					+ "AND facturas.vendedor=vendedores.id ";
 			StringBuilder query_principio = new StringBuilder(principio_sql);
 			StringBuilder query_final = new StringBuilder(principio_sql);
 			String modificador_sql_max = "MAX";
 			String modificador_sql_min = "MIN";
-			String part = (!es_admin) ? " and (facturas.cliente = " + cliente_actual.getId() + " ) " : "";
+			String part_min = (!es_admin)
+					? "AND facturas.id= " + "(SELECT MIN(v_empresa_ad_p1.facturas.id) FROM "
+							+ "v_empresa_ad_p1.facturas,v_empresa_ad_p1.clientes "
+							+ "WHERE facturas.cliente=clientes.id and clientes.id=" + cliente_actual.getId() + ") "
+					: "AND facturas.id=(SELECT " 
+							+ modificador_sql_min + 
+							"(v_empresa_ad_p1.facturas.id) "
+							+ "FROM v_empresa_ad_p1.facturas) ";
 
-			query_principio.append(part);
+			String part_max = (!es_admin)
+					? "AND facturas.id= " + "(SELECT MAX(v_empresa_ad_p1.facturas.id) FROM "
+							+ "v_empresa_ad_p1.facturas,v_empresa_ad_p1.clientes "
+							+ "WHERE facturas.cliente=clientes.id and clientes.id=" + cliente_actual.getId() + ") "
+					: "AND facturas.id=(SELECT " + modificador_sql_max + "(v_empresa_ad_p1.facturas.id) "
+							+ "FROM v_empresa_ad_p1.facturas) ";
 
-			query_principio.append("AND facturas.id=(SELECT " + modificador_sql_min
-					+ "(v_empresa_ad_p1.facturas.id) FROM v_empresa_ad_p1.facturas) ");
-			query_final.append("AND facturas.id=(SELECT " + modificador_sql_max
-					+ "(v_empresa_ad_p1.facturas.id) FROM v_empresa_ad_p1.facturas) ");
+			query_principio.append(part_min);
+			query_final.append(part_max);
+			
+			System.out.println(query_principio);
+			System.out.println(query_final);
 
 			try {
 				factura_del_principio = new Facturas(controladorfacturas.findBySQL(query_principio.toString()).get(0));
@@ -308,7 +325,7 @@ public class ControladorFormularioConsultas {
 				factura_del_principio.calcular_total_factura();
 				factura_del_final.calcular_total_factura();
 			} catch (Exception e) {
-
+				e.printStackTrace();
 			}
 
 			this.combobox_cantidad_desde.setText(factura_del_principio.getTotal() + "");

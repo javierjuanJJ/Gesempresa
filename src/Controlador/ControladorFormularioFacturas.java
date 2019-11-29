@@ -349,9 +349,6 @@ public class ControladorFormularioFacturas {
 		Lineas_Facturas l= new Lineas_Facturas(factura.getLineas_de_la_factura().get(contador_modificador));
 		this.cambiar_cantidad.setText(l.getCantidad()+"");
 		
-		ZoneId defaultZoneId = ZoneId.systemDefault();
-		
-		//toString() append +8 automatically.
 		java.sql.Date date2 = (java.sql.Date) factura.getFecha();
 		
 		LocalDate date = date2.toLocalDate();
@@ -381,8 +378,6 @@ public class ControladorFormularioFacturas {
 	public void cambiar_cantidad() {
 		int cantidad=0;
 		contador_modificador= facturas.getSelectionModel().getSelectedIndex();
-		
-		
 		
 		cantidad=Integer.parseInt(cambiar_cantidad.getText());
 		
