@@ -175,9 +175,9 @@ public class FacturasDAO implements GenericoDAO<Facturas> {
 		List<Facturas> Facturas_recibidas = null;
 		Facturas_recibidas = new ArrayList<Facturas>();
 		Facturas factura=null;
-		String jdbcUrl = "jdbc:mysql://127.0.0.1:3306/v_empresa_ad_p1?serverTimezone=" + TimeZone.getDefault().getID();
-        String usr = "root";
-        String pw = "1234";
+		String jdbcUrl = Conexion.url;
+        String usr = Conexion.kusuario;
+        String pw =  Conexion.kcontrasenya;
         campos = new ArrayList();
 		try (JdbcRowSet resultset = RowSetProvider.newFactory().createJdbcRowSet();
 				
@@ -311,6 +311,21 @@ public class FacturasDAO implements GenericoDAO<Facturas> {
 		return Facturas_recibidas;
 	}
 
+	
+
+	public void FindBySQL(String sqlselect) throws Exception {
+		try {
+			Conexion.getConnection().setAutoCommit(false);
+			preparedstatement = Conexion.getConnection().prepareStatement(sqlselect);
+			preparedstatement.executeUpdate();
+			Conexion.getConnection().commit();
+		} catch (SQLException e) {
+			Conexion.getConnection().rollback();
+		}
+	}
+
+	
+	
 	@Override
 	public boolean insert(Facturas t) throws Exception {
 		

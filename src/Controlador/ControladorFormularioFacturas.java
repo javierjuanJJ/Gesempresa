@@ -138,7 +138,7 @@ public class ControladorFormularioFacturas {
 			Lista_de_Facturas =  (es_admin)? controladorfacturas.findAll() : controladorfacturas.findAll2(cliente_actual);
 
 		
-			if (!es_admin) {
+			if (es_admin) {
 				Lista_de_Articulos = controladorArticulos.findAll();
 				Lista_de_Vendedores = controladorVendedores.findAll();
 				Lista_de_Clientes = controladorclientes.findAll();
@@ -378,26 +378,22 @@ public class ControladorFormularioFacturas {
 	public void cambiar_cantidad() {
 		int cantidad=0;
 		contador_modificador= facturas.getSelectionModel().getSelectedIndex();
-		
 		cantidad=Integer.parseInt(cambiar_cantidad.getText());
-		
-		//Lineas_Facturas l= new Lineas_Facturas(factura.getLineas_de_la_factura().get(contador_modificador));
-		//l.setCantidad(cantidad);
-		
-		//facturas.getItems().set(contador_modificador, l);
-	
 	}
 	
 	public void actualizar_linea() {
 		int cantidad=0;
-		
+		int cantidad_antes=0;
+		char mas='+';
+		char menos='-';
+		String query="";
 		Facturas factura = new Facturas(ComboBox_Facturas.getSelectionModel().getSelectedItem());
-	
+
 		cantidad=Integer.parseInt(cambiar_cantidad.getText());
 		
 		Lineas_Facturas l2= factura.getLineas_de_la_factura().get(contador_modificador);
 		l2.setArticulo(cambiar_articulo.getSelectionModel().getSelectedItem());
-		
+		cantidad_antes=l2.getCantidad();
 		l2.setCantidad(cantidad);
 		l2.set_total_Importe();
 		facturas.getItems().set(contador_modificador, l2);
@@ -437,14 +433,17 @@ public class ControladorFormularioFacturas {
 		total_de_la_factura.setText(String.valueOf(precio_iva + precio_total));
 		
 		try {
-
-			if (controladorfacturas.update(factura)) {
-				System.out.println("Hecho");
-			}
-			else {
-				System.out.println("No Hecho");
-			}
+			int id=cambiar_articulo.getSelectionModel().getSelectedItem().getId();
+			query="UPDATE articulos SET stock=stock" + mas+ cantidad_antes + " WHERE id=" + id + ";";
+			controladorfacturas.FindBySQL(query);
+			query="UPDATE articulos SET stock=stock" + menos + cantidad + " WHERE id=" + id + ";";
+			controladorfacturas.FindBySQL(query);
+		} catch (Exception e1) {
 			
+		}
+		
+		try {
+			controladorfacturas.update(factura);
 		} catch (Exception e) {
 			
 		}

@@ -7,12 +7,12 @@ import java.util.Properties;
 import java.util.TimeZone;
 
 public class Conexion {
-	//private static final String url = "jdbc:mysql://192.168.1.3:3306/v_empresa_ad_p1?serverTimezone=" + TimeZone.getDefault().getID();
+	//static final String url = "jdbc:mysql://192.168.1.3:3306/v_empresa_ad_p1?serverTimezone=" + TimeZone.getDefault().getID();
 	private static Connection conexion = null;
 	//static final String kusuario = "root";
 	//static final String kcontrasenya = "wChl75fSC2w9xQuu";
 	
-	private static final String url = "jdbc:mysql://127.0.0.1:3306/v_empresa_ad_p1?serverTimezone=" + TimeZone.getDefault().getID();
+	static final String url = "jdbc:mysql://127.0.0.1:3306/v_empresa_ad_p1?serverTimezone=" + TimeZone.getDefault().getID();
 	static final String kusuario = "root";
 	static final String kcontrasenya = "1234";
 
