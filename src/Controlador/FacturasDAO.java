@@ -26,7 +26,8 @@ public class FacturasDAO implements GenericoDAO<Facturas> {
 	protected static final String sql_select_all = "SELECT * FROM v_empresa_ad_p1.facturas, v_empresa_ad_p1.clientes , v_empresa_ad_p1.vendedores WHERE facturas.cliente=clientes.id AND facturas.vendedor=vendedores.id;";
 	protected static final String sql_UPDATE = "UPDATE `v_empresa_ad_p1`.`clientes` SET `nombre`=?, `direccion`=?, `passwd`=? WHERE `id`=?;";
 	
-	protected static final String sql_INSERT = "INSERT INTO `v_empresa_ad_p1`.`clientes` (`nombre`, `direccion`, `passwd`) VALUES (?, ?, ?);";
+	protected static final String sql_INSERT = "INSERT INTO `v_empresa_ad_p1`.`facturas` (`fecha`, `cliente`, `vendedor`, `formapago`) VALUES (?, ?, ?, ?);";
+	protected static final String sql_insert_Lineas_factura = "INSERT INTO `v_empresa_ad_p1`.`lineas_factura` (`factura`, `articulo`, `cantidad`, `importe`,`linea`) VALUES (?, ?, ?, ?, ?);";
 	protected static final String sql_DELETE = "DELETE FROM `v_empresa_ad_p1`.`clientes` WHERE `id`=?;";
 	protected static final String sql_Lineas_factura = "SELECT * FROM v_empresa_ad_p1.lineas_factura, v_empresa_ad_p1.articulos,v_empresa_ad_p1.grupos WHERE lineas_factura.articulo=articulos.id and articulos.grupo=grupos.id and factura=?;";
 	
@@ -328,10 +329,64 @@ public class FacturasDAO implements GenericoDAO<Facturas> {
 	
 	@Override
 	public boolean insert(Facturas t) throws Exception {
+		boolean realizado=true;
 		
-		
-		
-		return false;
+		try {
+			Conexion.getConnection().setAutoCommit(false);
+			
+			
+			preparedstatement = Conexion.getConnection().prepareStatement("SELECT MAX(id) FROM v_empresa_ad_p1.facturas;");
+			ResultSet id_maxima=preparedstatement.executeQuery();
+			id_maxima.beforeFirst();
+			int id_de_factura=0;
+			while (id_maxima.next()) {
+				id_de_factura=(id_maxima.getInt(1)) + 1;
+			}
+			
+			
+			
+			
+			preparedstatement = Conexion.getConnection().prepareStatement(sql_INSERT);
+			
+			preparedstatement.setDate(1, (Date) t.getFecha());
+			preparedstatement.setInt(2, t.getCliente().getId());
+			preparedstatement.setInt(3, t.getVendedor().getId());
+			preparedstatement.setString(4, t.getForma_de_pago());
+			
+			preparedstatement.addBatch();
+			System.out.println(preparedstatement);
+			System.out.println(t.getCliente() + " " + t.getCliente().getId());
+			
+			preparedstatement.executeBatch();
+			Conexion.getConnection().commit();
+			
+			preparedstatement = Conexion.getConnection().prepareStatement(sql_insert_Lineas_factura);
+
+			for (int contador=0;contador<t.getLineas_de_la_factura().size();contador++) {
+				preparedstatement.setInt(1, id_de_factura);
+				preparedstatement.setDouble(2, t.getLineas_de_la_factura().get(contador).getArticulo().getId());
+				preparedstatement.setInt(3, t.getLineas_de_la_factura().get(contador).getCantidad());
+				preparedstatement.setDouble(4, t.getLineas_de_la_factura().get(contador).getImporte());
+				preparedstatement.setDouble(5, t.getLineas_de_la_factura().get(contador).getLinea());
+				System.out.println(this.preparedstatement);
+				preparedstatement.addBatch();
+			}
+			
+			int []resultados=preparedstatement.executeBatch();
+			Conexion.getConnection().commit();
+			for (int contador=0;contador<resultados.length;contador++) {
+				if (resultados[contador]<=0) {
+					realizado=false;
+					contador=resultados.length;
+					throw new SQLException();
+				}
+			}
+		}
+		catch (SQLException e) {
+			Conexion.getConnection().rollback();
+			e.printStackTrace();
+		}
+		return realizado;
 	}
 
 	@Override

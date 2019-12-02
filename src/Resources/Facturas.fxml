@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlador.ControladorFormularioFacturas">
+<AnchorPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlador.ControladorFormularioFacturas">
    <children>
       <AnchorPane prefHeight="631.0" prefWidth="765.0">
          <children>
@@ -40,11 +38,13 @@
             <Label fx:id="iva" layoutX="390.0" layoutY="561.0" text="Label" />
             <Label fx:id="total_de_la_factura" layoutX="390.0" layoutY="591.0" text="Label" />
             <Button layoutX="534.0" layoutY="215.0" mnemonicParsing="false" onAction="#Exportar_factura_a_PDF" text="Exportar factura a PDF" />
-            <TextField fx:id="cambiar_cantidad" layoutX="559.0" layoutY="502.0" prefHeight="26.0" prefWidth="39.0" />
-            <Label fx:id="Cantidad" layoutX="500.0" layoutY="506.0" text="Cantidad" />
-            <Button fx:id="boton_actualizar" layoutX="566.0" layoutY="536.0" mnemonicParsing="false" onAction="#actualizar_linea" text="Actualizar" />
+            <TextField fx:id="cambiar_cantidad" layoutX="556.0" layoutY="464.0" prefHeight="26.0" prefWidth="39.0" />
+            <Label fx:id="Cantidad" layoutX="497.0" layoutY="468.0" text="Cantidad" />
+            <Button fx:id="boton_actualizar" layoutX="559.0" layoutY="506.0" mnemonicParsing="false" onAction="#actualizar_linea" text="Actualizar" />
             <DatePicker fx:id="Fecha_factura2" layoutX="566.0" layoutY="422.0" />
             <Label fx:id="Fecha_factura" layoutX="497.0" layoutY="426.0" text="Fecha " />
+            <Button layoutX="524.0" layoutY="548.0" mnemonicParsing="false" onAction="#insertar_linea" text="Añadir linea de factura" />
+            <Button layoutX="547.0" layoutY="586.0" mnemonicParsing="false" onAction="#insertar_factura" text="Insertar factura" />
          </children>
       </AnchorPane>
    </children>

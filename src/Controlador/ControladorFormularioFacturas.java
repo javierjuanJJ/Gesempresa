@@ -49,6 +49,7 @@ public class ControladorFormularioFacturas {
 	private static VendedoresDAO controladorVendedores;
 	private static int contador_modificador=0; 
 	private static boolean es_admin;
+	private static Facturas Factura_a_crear;
 
 	@FXML
 	private ComboBox<Facturas> ComboBox_Facturas;
@@ -134,7 +135,7 @@ public class ControladorFormularioFacturas {
 			Cantidad.setVisible(es_admin);
 			cambiar_cantidad.setVisible(es_admin);
 			boton_actualizar.setVisible(es_admin);
-			
+			Factura_a_crear=new Facturas();
 			Lista_de_Facturas =  (es_admin)? controladorfacturas.findAll() : controladorfacturas.findAll2(cliente_actual);
 
 		
@@ -367,6 +368,74 @@ public class ControladorFormularioFacturas {
 		vendedor.setText(cambiar_vendedor.getSelectionModel().getSelectedItem().toString());
 	
 	}
+	
+	public void insertar_linea() {
+		facturas.getColumns().clear();
+		Factura_a_crear=new Facturas(Factura_a_crear);
+		
+		Factura_a_crear.setCliente(new Clientes(cambiar_cliente.getSelectionModel().getSelectedItem()));
+		Factura_a_crear.setVendedor(new Vendedores(cambiar_vendedor.getSelectionModel().getSelectedItem()));
+		
+		LocalDate dateToConvert = this.Fecha_factura2.getValue();
+		java.sql.Date fecha_sql = java.sql.Date.valueOf(dateToConvert);
+		
+		Factura_a_crear.setFecha(fecha_sql);
+		
+		Lineas_Facturas linea_factura=new Lineas_Facturas();
+		linea_factura.setArticulo(new Articulos(cambiar_articulo.getSelectionModel().getSelectedItem()));
+		linea_factura.setCantidad(Integer.parseInt(cambiar_cantidad.getText()));
+		linea_factura.setImporte(linea_factura.getArticulo().getPrecio());
+		linea_factura.set_total_Importe();
+		linea_factura.setLinea(Factura_a_crear.getLineas_de_la_factura().size() + 1);
+		Factura_a_crear.getLineas_de_la_factura().add(linea_factura);
+		
+		
+		TableColumn<String, Lineas_Facturas> linea = new TableColumn<>("Linea de factura");
+		linea.setCellValueFactory(new PropertyValueFactory<>("linea"));
+		double precio_total = 0.0;
+		
+		TableColumn<Articulos, Lineas_Facturas> articulo = new TableColumn<>("Articulo");
+		articulo.setCellValueFactory(new PropertyValueFactory<>("articulo"));
+		
+		
+		
+		TableColumn<String, Lineas_Facturas> cantidad = new TableColumn<>("Cantidad de productos");
+		cantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
+
+		TableColumn<String, Lineas_Facturas> importe = new TableColumn<>("Precio del producto");
+		importe.setCellValueFactory(new PropertyValueFactory<>("importe"));
+
+		TableColumn<String, Lineas_Facturas> total_producto = new TableColumn<>("Total");
+		total_producto.setCellValueFactory(new PropertyValueFactory<>("total_importe"));
+		
+		facturas.getColumns().addAll(linea, articulo, cantidad, importe, total_producto);
+		facturas.getItems().add(Factura_a_crear.getLineas_de_la_factura().get(Factura_a_crear.getLineas_de_la_factura().size()-1));
+		
+		Factura_a_crear.calcular_total_factura();
+		cliente.setText(Factura_a_crear.getCliente().getNombre() + System.lineSeparator() + Factura_a_crear.getCliente().getDireccion()
+				+ System.lineSeparator());
+		vendedor.setText(Factura_a_crear.getVendedor().getNombre() + System.lineSeparator());
+		numero_factura.setText(Factura_a_crear.getId() + "");
+		fecha_factura.setText(Factura_a_crear.getFecha().toString());
+		subtotal.setText(String.valueOf(Factura_a_crear.getTotal()));
+		iva.setText(String.valueOf((Factura_a_crear.getTotal() * 21) / 100));
+		total_de_la_factura.setText(String.valueOf(((Factura_a_crear.getTotal() * 21) / 100) + Factura_a_crear.getTotal()));
+		
+	}
+	
+	public void insertar_factura() {
+		try {
+			this.controladorfacturas.insert(Factura_a_crear);
+			facturas.getColumns().clear();
+			Factura_a_crear=new Facturas();
+			facturas.getItems().clear();
+			Lista_de_Facturas =  (es_admin)? controladorfacturas.findAll() : controladorfacturas.findAll2(cliente_actual);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	
 	public void cambiar_articulo() {
 		contador_modificador= facturas.getSelectionModel().getSelectedIndex();
