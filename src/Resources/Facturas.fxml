@@ -44,7 +44,11 @@
             <DatePicker fx:id="Fecha_factura2" layoutX="566.0" layoutY="422.0" />
             <Label fx:id="Fecha_factura" layoutX="497.0" layoutY="426.0" text="Fecha " />
             <Button layoutX="524.0" layoutY="548.0" mnemonicParsing="false" onAction="#insertar_linea" text="Añadir linea de factura" />
-            <Button layoutX="547.0" layoutY="586.0" mnemonicParsing="false" onAction="#insertar_factura" text="Insertar factura" />
+            <Button layoutX="496.0" layoutY="586.0" mnemonicParsing="false" onAction="#insertar_factura" text="Insertar factura" />
+            <Button id="Pantalla_Principio" layoutX="20.0" layoutY="586.0" mnemonicParsing="false" onAction="#Cambiar_Pantalla" text="Atras" />
+            <Button layoutX="644.0" layoutY="586.0" mnemonicParsing="false" onAction="#eliminar_factura" text="Eliminar" />
+            <ComboBox fx:id="formas_de_pago" layoutX="600.0" layoutY="119.0" onMouseClicked="#actualizar_formas_de_pago" prefWidth="150.0" />
+            <Label layoutX="475.0" layoutY="124.0" text="Forma de pago" />
          </children>
       </AnchorPane>
    </children>

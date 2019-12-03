@@ -1,20 +1,14 @@
 package Controlador;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
-import Modelo.Articulos;
 import Modelo.Clientes;
 import Modelo.Facturas;
-import Modelo.Lineas_Facturas;
 import Modelo.Vendedores;
 import application.Main;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -78,8 +72,6 @@ public class ControladorFormularioConsultas {
 
 	private static FacturasDAO controladorfacturas;
 	private static List<Facturas> Lista_de_Facturas;
-	private static List<Vendedores> Lista_de_Vendedores;
-	private static List<Clientes> Lista_de_Clientes;
 	private static Clientes cliente_actual;
 	private static ClientesDAO controladorclientes;
 	private static VendedoresDAO controladorVendedores;
@@ -189,6 +181,7 @@ public class ControladorFormularioConsultas {
 
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void consultar() {
 
 		try {
@@ -217,7 +210,7 @@ public class ControladorFormularioConsultas {
 
 			query.append(part);
 
-			part = (!es_admin) ? "and (facturas.cliente = " + this.cliente_actual.getId() + " ) " : "";
+			part = (!es_admin) ? "and (facturas.cliente = " + cliente_actual.getId() + " ) " : "";
 
 			query.append(part);
 
@@ -248,6 +241,7 @@ public class ControladorFormularioConsultas {
 
 			double numero_desde = 0.0;
 			double numero_hasta = 0.0;
+			@SuppressWarnings("static-access")
 			ArrayList campos = controladorfacturas.campos;
 
 			Facturas_recibidas.addAll(controladorfacturas.findBySQL(query.toString()));
@@ -260,8 +254,7 @@ public class ControladorFormularioConsultas {
 				}
 
 				for (int contador = 0; contador < 2; contador++) {
-					tabla_consulta1.getColumns()
-							.add(new TableColumn<Vendedores, String>(campos.get(contador).toString()));
+					tabla_consulta1.getColumns().add(new TableColumn<Vendedores, String>(campos.get(contador).toString()));
 				}
 
 				for (int contador = 0; contador < 2; contador++) {
