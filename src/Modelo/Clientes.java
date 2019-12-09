@@ -60,7 +60,7 @@ public class Clientes {
 	}
 	@Override
 	public String toString() {
-		return getNombre();
+		return this.getId() + " - " +getNombre();
 	}
 
 }

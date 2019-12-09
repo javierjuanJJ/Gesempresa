@@ -27,7 +27,7 @@ public class FacturasDAO implements GenericoDAO<Facturas> {
 	protected static final String sql_insert_Lineas_factura = "INSERT INTO `v_empresa_ad_p1`.`lineas_factura` (`factura`, `articulo`, `cantidad`, `importe`,`linea`) VALUES (?, ?, ?, ?, ?);";
 	protected static final String sql_DELETE = "DELETE FROM `v_empresa_ad_p1`.`facturas` WHERE `id`=?;";
 	protected static final String sql_DELETE_Lineas_facturas = "DELETE FROM v_empresa_ad_p1.lineas_factura WHERE `factura`=?;";
-	protected static final String sql_Lineas_factura = "SELECT * FROM v_empresa_ad_p1.lineas_factura, v_empresa_ad_p1.articulos,v_empresa_ad_p1.grupos WHERE lineas_factura.articulo=articulos.id and articulos.grupo=grupos.id and factura=?;";
+	protected static final String sql_Lineas_factura = "SELECT * FROM v_empresa_ad_p1.lineas_factura, v_empresa_ad_p1.articulos,v_empresa_ad_p1.grupos WHERE lineas_factura.articulo=articulos.id and articulos.grupo=grupos.id and factura=? ORDER BY v_empresa_ad_p1.lineas_factura.linea , v_empresa_ad_p1.lineas_factura.factura;";
 	
 	protected static final String sql_actualizar_factura = "UPDATE v_empresa_ad_p1.facturas SET fecha=?,cliente=?,vendedor=? WHERE id=?;";
 	protected static final String sql_actualizar_linea_factura = "UPDATE v_empresa_ad_p1.lineas_factura SET articulo=?,importe=?,cantidad=? WHERE linea=? AND factura=?;";
