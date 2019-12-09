@@ -259,6 +259,7 @@ public class FacturasDAO implements GenericoDAO<Facturas> {
 			preparedstatement.executeUpdate();
 			Conexion.getConnection().commit();
 		} catch (SQLException e) {
+			e.printStackTrace();
 			Conexion.getConnection().rollback();
 		}
 	}

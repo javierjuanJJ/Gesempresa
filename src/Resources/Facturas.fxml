@@ -34,22 +34,22 @@
             <Label layoutX="141.0" layoutY="48.0" text="Enviar a:" />
             <Label fx:id="cliente" layoutX="27.0" layoutY="78.0" prefHeight="57.0" prefWidth="87.0" />
             <Label fx:id="vendedor" layoutX="134.0" layoutY="75.0" prefHeight="57.0" prefWidth="81.0" />
-            <Label layoutX="293.0" layoutY="531.0" text="Subtotal: " />
-            <Label layoutX="293.0" layoutY="561.0" text="IVA%" />
-            <Label layoutX="293.0" layoutY="591.0" text="Total:" />
-            <Label fx:id="subtotal" layoutX="390.0" layoutY="531.0" text="Label" />
-            <Label fx:id="iva" layoutX="390.0" layoutY="561.0" text="Label" />
-            <Label fx:id="total_de_la_factura" layoutX="390.0" layoutY="591.0" text="Label" />
+            <Label layoutX="245.0" layoutY="531.0" text="Subtotal: " />
+            <Label layoutX="256.0" layoutY="561.0" text="IVA%" />
+            <Label layoutX="256.0" layoutY="591.0" text="Total:" />
+            <Label fx:id="subtotal" layoutX="336.0" layoutY="531.0" text="Label" />
+            <Label fx:id="iva" layoutX="336.0" layoutY="561.0" text="Label" />
+            <Label fx:id="total_de_la_factura" layoutX="336.0" layoutY="591.0" text="Label" />
             <Button layoutX="534.0" layoutY="215.0" mnemonicParsing="false" onAction="#Exportar_factura_a_PDF" text="Exportar factura a PDF" />
             <TextField fx:id="cambiar_cantidad" layoutX="556.0" layoutY="464.0" prefHeight="26.0" prefWidth="39.0" />
             <Label fx:id="Cantidad" layoutX="497.0" layoutY="468.0" text="Cantidad" />
             <Button fx:id="boton_actualizar" layoutX="559.0" layoutY="506.0" mnemonicParsing="false" onAction="#actualizar_linea" text="Actualizar" />
             <DatePicker fx:id="Fecha_factura2" layoutX="566.0" layoutY="422.0" />
             <Label fx:id="Fecha_factura" layoutX="497.0" layoutY="426.0" text="Fecha " />
-            <Button fx:id="anyadir_linea" layoutX="524.0" layoutY="548.0" mnemonicParsing="false" onAction="#insertar_linea" text="Añadir linea de factura" />
-            <Button fx:id="insertar_linea" layoutX="496.0" layoutY="586.0" mnemonicParsing="false" onAction="#insertar_factura" text="Insertar factura" />
+            <Button fx:id="anyadir_linea" layoutX="400.0" layoutY="549.0" mnemonicParsing="false" onAction="#insertar_linea" text="Añadir linea de factura" />
+            <Button fx:id="insertar_linea" layoutX="497.0" layoutY="596.0" mnemonicParsing="false" onAction="#insertar_factura" text="Insertar factura" />
             <Button id="Pantalla_Principio" layoutX="20.0" layoutY="586.0" mnemonicParsing="false" onAction="#Cambiar_Pantalla" text="Atras" />
-            <Button fx:id="eliminar_linea" layoutX="644.0" layoutY="586.0" mnemonicParsing="false" onAction="#eliminar_factura" text="Eliminar" />
+            <Button fx:id="eliminar_linea" layoutX="646.0" layoutY="596.0" mnemonicParsing="false" onAction="#eliminar_factura" text="Eliminar" />
             <ComboBox fx:id="formas_de_pago" layoutX="600.0" layoutY="119.0" onMouseClicked="#actualizar_formas_de_pago" prefWidth="150.0" />
             <Label fx:id="forma_de_pago_texto" layoutX="475.0" layoutY="124.0" text="Forma de pago" />
             <HBox layoutX="278.0" layoutY="469.0" prefHeight="26.0" prefWidth="207.0">
@@ -69,6 +69,8 @@
                   <Label text="Lineas facturas" />
                </children>
             </HBox>
+            <Button layoutX="551.0" layoutY="549.0" mnemonicParsing="false" onAction="#insertar_linea_a_factura_existente" text="Insertar línea" />
+            <Button layoutX="653.0" layoutY="549.0" mnemonicParsing="false" onAction="#eliminar_linea_a_factura_existente" text="Eliminar línea" />
          </children>
       </AnchorPane>
    </children>

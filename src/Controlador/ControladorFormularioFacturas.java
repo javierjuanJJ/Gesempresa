@@ -151,8 +151,10 @@ public class ControladorFormularioFacturas {
 			formas_de_pago.setVisible(es_admin);
 			forma_de_pago_texto.setVisible(es_admin);
 			Factura_a_crear = new Facturas();
-			Lista_de_Facturas = (es_admin) ? controladorfacturas.findAll()
-					: controladorfacturas.findAll2(cliente_actual);
+			
+			Cargar_facturas();
+			
+			
 
 			if (es_admin) {
 				Lista_de_Articulos = controladorArticulos.findAll();
@@ -166,6 +168,18 @@ public class ControladorFormularioFacturas {
 			Platform.exit();
 		}
 
+	}
+
+	private void Cargar_facturas() {
+		try {
+			Lista_de_Facturas = (es_admin) ? controladorfacturas.findAll()
+					: controladorfacturas.findAll2(cliente_actual);
+		}
+		
+		catch (Exception e) {
+			(new Main()).mensajeExcepcion(e, e.getMessage());
+			Platform.exit();
+		}
 	}
 
 	public void Cambiar_Pantalla(ActionEvent action) throws IOException {
@@ -516,7 +530,61 @@ public class ControladorFormularioFacturas {
 		iva.setText(String.valueOf((Factura_a_crear.getTotal() * 21) / 100));
 		total_de_la_factura
 				.setText(String.valueOf(((Factura_a_crear.getTotal() * 21) / 100) + Factura_a_crear.getTotal()));
-		formas_de_pago.getSelectionModel().select(this.Factura_a_crear.getForma_de_pago());
+		formas_de_pago.getSelectionModel().select(Factura_a_crear.getForma_de_pago());
+		Cargar_facturas();
+	}
+	public void insertar_linea_a_factura_existente() {
+		
+		try {
+			Facturas factura=new Facturas(Lista_de_Facturas.get(contador_modificador));
+			Lineas_Facturas linea_factura = new Lineas_Facturas();
+			linea_factura.setArticulo(new Articulos(cambiar_articulo.getSelectionModel().getSelectedItem()));
+			linea_factura.setCantidad(Integer.parseInt(cambiar_cantidad.getText()));
+			linea_factura.setImporte(linea_factura.getArticulo().getPrecio());
+			linea_factura.set_total_Importe();
+			linea_factura.setLinea(factura.getLineas_de_la_factura().size() + 1);
+		
+		String query_sql="INSERT INTO v_empresa_ad_p1.lineas_factura (linea, factura, articulo, cantidad, importe) VALUES("
+				+ linea_factura.getLinea()
+				+ ", "
+				+ factura.getId()
+				+ ", "
+				+ linea_factura.getArticulo().getId()
+				+ ", "
+				+ linea_factura.getCantidad()
+				+ ", "
+				+ linea_factura.getImporte()
+				+ ");";
+		
+		
+		controladorfacturas.FindBySQL(query_sql);
+		Cargar_facturas();
+		} catch (Exception e) {
+
+		}
+
+	}
+	
+public void eliminar_linea_a_factura_existente() {
+		
+		try {
+			Facturas factura=new Facturas(Lista_de_Facturas.get(contador_modificador));
+			Lineas_Facturas linea_factura = new Lineas_Facturas(factura.getLineas_de_la_factura().get(facturas.getSelectionModel().getSelectedIndex()));
+		
+		String query_sql="DELETE FROM v_empresa_ad_p1.lineas_factura WHERE linea="
+				+ linea_factura.getLinea()
+				+ " AND factura="
+				+ factura.getId()
+				+ ";"
+				;
+		
+		
+		controladorfacturas.FindBySQL(query_sql);
+		//Cargar_facturas();
+		} catch (Exception e) {
+
+		}
+
 	}
 
 	public void insertar_factura() {
@@ -535,6 +603,7 @@ public class ControladorFormularioFacturas {
 			facturas.getItems().clear();
 			Lista_de_Facturas = (es_admin) ? controladorfacturas.findAll()
 					: controladorfacturas.findAll2(cliente_actual);
+			Cargar_facturas();
 		} catch (Exception e) {
 			(new Main()).mensajeExcepcion(e, e.getMessage());
 		}
@@ -594,6 +663,7 @@ public class ControladorFormularioFacturas {
 
 			if (controladorfacturas.update(factura)) {
 				(new Main()).mensajeConfirmacion("Actualizacion de facturas completada", "", "");
+				Cargar_facturas();
 			}
 
 		} catch (Exception e) {
@@ -613,6 +683,7 @@ public class ControladorFormularioFacturas {
 			controladorfacturas.FindBySQL(query);
 			query = "UPDATE articulos SET stock=stock" + menos + cantidad + " WHERE id=" + id + ";";
 			controladorfacturas.FindBySQL(query);
+			Cargar_facturas();
 		} catch (Exception e1) {
 
 		}
@@ -623,6 +694,7 @@ public class ControladorFormularioFacturas {
 
 			if (controladorfacturas.delete(ComboBox_Facturas.getSelectionModel().getSelectedItem().getId())) {
 				(new Main()).mensajeConfirmacion("Eliminacion de facturas completada", "", "");
+				Cargar_facturas();
 			}
 
 		} catch (Exception e) {
