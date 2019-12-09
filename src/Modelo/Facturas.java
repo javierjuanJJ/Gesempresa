@@ -123,7 +123,7 @@ public class Facturas {
 	public String toString() {
 		
 		StringBuilder resultado=new StringBuilder();
-		
+		resultado.append("Factura numero " + getId() + " ");
 		resultado.append(fecha + " Cliente: ");
 		resultado.append(cliente.getNombre() + " Vendedor: ");
 		resultado.append(vendedor.getNombre() + " ");

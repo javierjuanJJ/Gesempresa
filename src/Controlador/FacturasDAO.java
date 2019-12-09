@@ -20,7 +20,7 @@ public class FacturasDAO implements GenericoDAO<Facturas> {
 	
 	protected static final String sql_select_by_PK = "SELECT * FROM v_empresa_ad_p1.facturas, v_empresa_ad_p1.clientes , v_empresa_ad_p1.vendedores WHERE facturas.cliente=clientes.id AND facturas.vendedor=vendedores.id and clientes.id=?;";
 	protected static final String sql_select_by_PK_user = "SELECT * FROM v_empresa_ad_p1.facturas, v_empresa_ad_p1.clientes , v_empresa_ad_p1.vendedores WHERE facturas.cliente=clientes.id AND facturas.vendedor=vendedores.id and clientes.id=?;";
-	protected static final String sql_select_all = "SELECT * FROM v_empresa_ad_p1.facturas, v_empresa_ad_p1.clientes , v_empresa_ad_p1.vendedores WHERE facturas.cliente=clientes.id AND facturas.vendedor=vendedores.id;";
+	protected static final String sql_select_all = "SELECT * FROM v_empresa_ad_p1.facturas, v_empresa_ad_p1.clientes , v_empresa_ad_p1.vendedores WHERE facturas.cliente=clientes.id AND facturas.vendedor=vendedores.id ORDER BY facturas.id;";
 	protected static final String sql_UPDATE = "UPDATE `v_empresa_ad_p1`.`clientes` SET `nombre`=?, `direccion`=?, `passwd`=? WHERE `id`=?;";
 	
 	protected static final String sql_INSERT = "INSERT INTO `v_empresa_ad_p1`.`facturas` (`fecha`, `cliente`, `vendedor`, `formapago`) VALUES (?, ?, ?, ?);";

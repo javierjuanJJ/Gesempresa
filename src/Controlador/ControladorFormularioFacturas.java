@@ -474,6 +474,8 @@ public class ControladorFormularioFacturas {
 		cambiar_vendedor.getItems().clear();
 		cambiar_vendedor.getItems().add(factura.getVendedor());
 		cambiar_vendedor.getSelectionModel().select(0);
+		
+		formas_de_pago.getSelectionModel().select(factura.getForma_de_pago());
 
 		java.sql.Date date2 = (java.sql.Date) factura.getFecha();
 
@@ -559,6 +561,7 @@ public class ControladorFormularioFacturas {
 		
 		controladorfacturas.FindBySQL(query_sql);
 		Cargar_facturas();
+		poner_datos_en_la_tabla(Lista_de_Facturas.get(contador_modificador));
 		} catch (Exception e) {
 
 		}
@@ -580,7 +583,9 @@ public void eliminar_linea_a_factura_existente() {
 		
 		
 		controladorfacturas.FindBySQL(query_sql);
-		//Cargar_facturas();
+		Cargar_facturas();
+		poner_datos_en_la_tabla(Lista_de_Facturas.get(contador_modificador));
+		
 		} catch (Exception e) {
 
 		}
@@ -604,6 +609,7 @@ public void eliminar_linea_a_factura_existente() {
 			Lista_de_Facturas = (es_admin) ? controladorfacturas.findAll()
 					: controladorfacturas.findAll2(cliente_actual);
 			Cargar_facturas();
+			poner_datos_en_la_tabla(Lista_de_Facturas.get(contador_modificador));
 		} catch (Exception e) {
 			(new Main()).mensajeExcepcion(e, e.getMessage());
 		}
@@ -666,6 +672,8 @@ public void eliminar_linea_a_factura_existente() {
 				Cargar_facturas();
 			}
 
+			Cargar_facturas();
+			poner_datos_en_la_tabla(Lista_de_Facturas.get(contador_modificador));
 		} catch (Exception e) {
 			(new Main()).mensajeExcepcion(e, e.getMessage());
 		}
@@ -684,6 +692,7 @@ public void eliminar_linea_a_factura_existente() {
 			query = "UPDATE articulos SET stock=stock" + menos + cantidad + " WHERE id=" + id + ";";
 			controladorfacturas.FindBySQL(query);
 			Cargar_facturas();
+			poner_datos_en_la_tabla(Lista_de_Facturas.get(contador_modificador));
 		} catch (Exception e1) {
 
 		}
@@ -695,6 +704,7 @@ public void eliminar_linea_a_factura_existente() {
 			if (controladorfacturas.delete(ComboBox_Facturas.getSelectionModel().getSelectedItem().getId())) {
 				(new Main()).mensajeConfirmacion("Eliminacion de facturas completada", "", "");
 				Cargar_facturas();
+				poner_datos_en_la_tabla(Lista_de_Facturas.get(contador_modificador));
 			}
 
 		} catch (Exception e) {
