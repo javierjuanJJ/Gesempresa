@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
@@ -8,11 +11,11 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlador.ControladorFormularioFacturas">
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlador.ControladorFormularioFacturas">
    <children>
       <AnchorPane prefHeight="631.0" prefWidth="765.0">
          <children>
-            <TableView fx:id="facturas" layoutX="6.0" layoutY="137.0" onMouseClicked="#poner_datos" prefHeight="369.0" prefWidth="479.0" />
+            <TableView fx:id="facturas" layoutX="6.0" layoutY="137.0" onMouseClicked="#poner_datos" prefHeight="333.0" prefWidth="479.0" />
             <Button id="Pantalla_Consultas" layoutX="566.0" layoutY="167.0" mnemonicParsing="false" onAction="#Cambiar_Pantalla" text="Consultar" />
             <Label layoutX="445.0" layoutY="57.0" text="Facturas disponibles: " />
             <Label fx:id="Cliente" layoutX="484.0" layoutY="275.0" text="Cliente" />
@@ -43,12 +46,29 @@
             <Button fx:id="boton_actualizar" layoutX="559.0" layoutY="506.0" mnemonicParsing="false" onAction="#actualizar_linea" text="Actualizar" />
             <DatePicker fx:id="Fecha_factura2" layoutX="566.0" layoutY="422.0" />
             <Label fx:id="Fecha_factura" layoutX="497.0" layoutY="426.0" text="Fecha " />
-            <Button layoutX="524.0" layoutY="548.0" mnemonicParsing="false" onAction="#insertar_linea" text="Añadir linea de factura" />
-            <Button layoutX="496.0" layoutY="586.0" mnemonicParsing="false" onAction="#insertar_factura" text="Insertar factura" />
+            <Button fx:id="anyadir_linea" layoutX="524.0" layoutY="548.0" mnemonicParsing="false" onAction="#insertar_linea" text="Añadir linea de factura" />
+            <Button fx:id="insertar_linea" layoutX="496.0" layoutY="586.0" mnemonicParsing="false" onAction="#insertar_factura" text="Insertar factura" />
             <Button id="Pantalla_Principio" layoutX="20.0" layoutY="586.0" mnemonicParsing="false" onAction="#Cambiar_Pantalla" text="Atras" />
-            <Button layoutX="644.0" layoutY="586.0" mnemonicParsing="false" onAction="#eliminar_factura" text="Eliminar" />
+            <Button fx:id="eliminar_linea" layoutX="644.0" layoutY="586.0" mnemonicParsing="false" onAction="#eliminar_factura" text="Eliminar" />
             <ComboBox fx:id="formas_de_pago" layoutX="600.0" layoutY="119.0" onMouseClicked="#actualizar_formas_de_pago" prefWidth="150.0" />
-            <Label layoutX="475.0" layoutY="124.0" text="Forma de pago" />
+            <Label fx:id="forma_de_pago_texto" layoutX="475.0" layoutY="124.0" text="Forma de pago" />
+            <HBox layoutX="278.0" layoutY="469.0" prefHeight="26.0" prefWidth="207.0">
+               <children>
+                  <Button id="Primero" mnemonicParsing="false" onAction="#poner_datos_controles" text="&lt;&lt;" />
+                  <Button id="Anterior" mnemonicParsing="false" onAction="#poner_datos_controles" text="&lt;" />
+                  <Button id="Siguiente" mnemonicParsing="false" onAction="#poner_datos_controles" text="&gt;" />
+                  <Button id="Ultimo" mnemonicParsing="false" onAction="#poner_datos_controles" text="&gt;&gt;" />
+               </children>
+            </HBox>
+            <HBox layoutX="38.0" layoutY="472.0" prefHeight="26.0" prefWidth="207.0">
+               <children>
+                  <Button id="Primero_lineas" mnemonicParsing="false" onAction="#poner_datos_controles" text="&lt;&lt;" />
+                  <Button id="Anterior_lineas" mnemonicParsing="false" onAction="#poner_datos_controles" text="&lt;" />
+                  <Button id="Siguiente_lineas" mnemonicParsing="false" onAction="#poner_datos_controles" text="&gt;" />
+                  <Button id="Ultimo_lineas" mnemonicParsing="false" onAction="#poner_datos_controles" text="&gt;&gt;" />
+                  <Label text="Lineas facturas" />
+               </children>
+            </HBox>
          </children>
       </AnchorPane>
    </children>

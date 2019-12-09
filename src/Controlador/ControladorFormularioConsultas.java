@@ -1,5 +1,6 @@
 package Controlador;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ import Modelo.Facturas;
 import Modelo.Vendedores;
 import application.Main;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -89,7 +91,8 @@ public class ControladorFormularioConsultas {
 			es_admin = (cliente_actual.getNombre().toLowerCase().equals("admin"));
 			Lista_de_Facturas = (es_admin) ? controladorfacturas.findAll()
 					: controladorfacturas.findAll2(cliente_actual);
-
+			checkbox_cliente.setVisible(es_admin);
+			checkbox_vendedor.setVisible(es_admin);
 			this.combobox_cliente_desde.setVisible(es_admin);
 			this.checkbox_cliente_hasta.setVisible(es_admin);
 			this.combobox_vendedor_desde.setVisible(es_admin);
@@ -105,6 +108,13 @@ public class ControladorFormularioConsultas {
 			Platform.exit();
 		}
 
+	}
+	
+	public void Cambiar_Pantalla(ActionEvent action) throws IOException {
+		String id_boton = "";
+		id_boton = ((Button) action.getSource()).getId();
+		Main main = new Main();
+		main.Cambiar_Pantalla(id_boton);
 	}
 
 	public void actualizar_clientes() {

@@ -22,6 +22,7 @@ import application.Main;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -46,12 +47,13 @@ public class ControladorFormularioFacturas {
 	private static ArticulosDAO controladorArticulos;
 	private static VendedoresDAO controladorVendedores;
 	private static int contador_modificador = 0;
+	private static int contador_modificador_lineas = 0;
 	private static boolean es_admin;
 	private static Facturas Factura_a_crear;
 
 	@FXML
 	private ComboBox<Facturas> ComboBox_Facturas;
-	
+
 	@FXML
 	private ComboBox<String> formas_de_pago;
 
@@ -111,6 +113,14 @@ public class ControladorFormularioFacturas {
 
 	@FXML
 	private Button boton_actualizar;
+	@FXML
+	private Button anyadir_linea;
+	@FXML
+	private Button insertar_linea;
+	@FXML
+	private Button eliminar_linea;
+	@FXML
+	private Label forma_de_pago_texto;
 
 	@FXML
 	public void initialize() {
@@ -133,7 +143,13 @@ public class ControladorFormularioFacturas {
 			Fecha_factura2.setVisible(es_admin);
 			Cantidad.setVisible(es_admin);
 			cambiar_cantidad.setVisible(es_admin);
+			cambiar_articulo.setVisible(es_admin);
 			boton_actualizar.setVisible(es_admin);
+			anyadir_linea.setVisible(es_admin);
+			insertar_linea.setVisible(es_admin);
+			eliminar_linea.setVisible(es_admin);
+			formas_de_pago.setVisible(es_admin);
+			forma_de_pago_texto.setVisible(es_admin);
 			Factura_a_crear = new Facturas();
 			Lista_de_Facturas = (es_admin) ? controladorfacturas.findAll()
 					: controladorfacturas.findAll2(cliente_actual);
@@ -142,7 +158,7 @@ public class ControladorFormularioFacturas {
 				Lista_de_Articulos = controladorArticulos.findAll();
 				Lista_de_Vendedores = controladorVendedores.findAll();
 				Lista_de_Clientes = controladorclientes.findAll();
-				Lista_de_formas_de_pago=controladorfacturas.findAll_formas_pago();
+				Lista_de_formas_de_pago = controladorfacturas.findAll_formas_pago();
 			}
 
 		} catch (Exception e) {
@@ -160,82 +176,117 @@ public class ControladorFormularioFacturas {
 	}
 
 	public void actualizar() {
+		try {
+			ComboBox_Facturas.getItems().clear();
+			ComboBox_Facturas.getItems().addAll(Lista_de_Facturas);
+		} catch (Exception e) {
 
-		ComboBox_Facturas.getItems().clear();
-		ComboBox_Facturas.getItems().addAll(Lista_de_Facturas);
+		}
 
 	}
 
 	public void actualizar_cliente() {
+		try {
+			cambiar_cliente.getItems().clear();
+			cambiar_cliente.getItems().addAll(Lista_de_Clientes);
 
-		cambiar_cliente.getItems().clear();
-		cambiar_cliente.getItems().addAll(Lista_de_Clientes);
+		} catch (Exception e) {
+
+		}
 
 	}
-	
-	public void actualizar_formas_de_pago() {
 
-		formas_de_pago.getItems().clear();
-		formas_de_pago.getItems().addAll(Lista_de_formas_de_pago);
+	public void actualizar_formas_de_pago() {
+		try {
+			formas_de_pago.getItems().clear();
+			formas_de_pago.getItems().addAll(Lista_de_formas_de_pago);
+		} catch (Exception e) {
+
+		}
 
 	}
 
 	public void actualizar_vendedores() {
+		try {
+			cambiar_vendedor.getItems().clear();
+			cambiar_vendedor.getItems().addAll(Lista_de_Vendedores);
+		} catch (Exception e) {
 
-		cambiar_vendedor.getItems().clear();
-		cambiar_vendedor.getItems().addAll(Lista_de_Vendedores);
+		}
 
 	}
 
 	public void actualizar_articulos() {
+		try {
+			cambiar_articulo.getItems().clear();
+			cambiar_articulo.getItems().addAll(Lista_de_Articulos);
+		} catch (Exception e) {
 
-		cambiar_articulo.getItems().clear();
-		cambiar_articulo.getItems().addAll(Lista_de_Articulos);
+		}
+
+	}
+
+	public void poner_datos_en_la_tabla(Facturas factura) {
+
+		try {
+			facturas.getItems().clear();
+			facturas.getColumns().clear();
+			TableColumn<String, Lineas_Facturas> linea = new TableColumn<>("Linea de factura");
+			linea.setCellValueFactory(new PropertyValueFactory<>("linea"));
+			double precio_total = 0.0;
+
+			TableColumn<Articulos, Lineas_Facturas> articulo = new TableColumn<>("Articulo");
+			articulo.setCellValueFactory(new PropertyValueFactory<>("articulo"));
+
+			TableColumn<String, Lineas_Facturas> cantidad = new TableColumn<>("Cantidad de productos");
+			cantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
+
+			TableColumn<String, Lineas_Facturas> importe = new TableColumn<>("Precio del producto");
+			importe.setCellValueFactory(new PropertyValueFactory<>("importe"));
+
+			TableColumn<String, Lineas_Facturas> total_producto = new TableColumn<>("Total");
+			total_producto.setCellValueFactory(new PropertyValueFactory<>("total_importe"));
+			facturas.getColumns().addAll(linea, articulo, cantidad, importe, total_producto);
+
+			for (int contador = 0; contador < factura.getLineas_de_la_factura().size(); contador++) {
+				factura.getLineas_de_la_factura().get(contador).set_total_Importe();
+				facturas.getItems().add(factura.getLineas_de_la_factura().get(contador));
+				precio_total += factura.getLineas_de_la_factura().get(contador).getTotal_importe();
+			}
+			facturas.getSelectionModel().clearAndSelect(contador_modificador_lineas);
+			cliente.setText(factura.getCliente().getNombre() + System.lineSeparator()
+					+ factura.getCliente().getDireccion() + System.lineSeparator());
+			vendedor.setText(factura.getVendedor().getNombre() + System.lineSeparator());
+			numero_factura.setText(factura.getId() + "");
+			fecha_factura.setText(factura.getFecha().toString());
+			subtotal.setText(String.valueOf(precio_total));
+			double precio_iva = 0.0;
+			precio_iva = (precio_total * 21) / 100;
+			iva.setText(String.valueOf(precio_iva));
+			total_de_la_factura.setText(String.valueOf(precio_iva + precio_total));
+		} catch (Exception e) {
+
+		}
 
 	}
 
 	public void poner_informacion() {
-		facturas.getColumns().clear();
-		facturas.getItems().clear();
-		double precio_iva = 0.0;
-		Facturas factura = new Facturas(ComboBox_Facturas.getSelectionModel().getSelectedItem());
-		TableColumn<String, Lineas_Facturas> linea = new TableColumn<>("Linea de factura");
-		linea.setCellValueFactory(new PropertyValueFactory<>("linea"));
-		double precio_total = 0.0;
 
-		TableColumn<Articulos, Lineas_Facturas> articulo = new TableColumn<>("Articulo");
-		articulo.setCellValueFactory(new PropertyValueFactory<>("articulo"));
+		try {
+			facturas.getColumns().clear();
+			facturas.getItems().clear();
+			contador_modificador = ComboBox_Facturas.getSelectionModel().getSelectedIndex();
+			Facturas factura = new Facturas(Lista_de_Facturas.get(contador_modificador));
+			poner_datos_en_la_tabla(factura);
 
-		TableColumn<String, Lineas_Facturas> cantidad = new TableColumn<>("Cantidad de productos");
-		cantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
+		} catch (Exception e) {
 
-		TableColumn<String, Lineas_Facturas> importe = new TableColumn<>("Precio del producto");
-		importe.setCellValueFactory(new PropertyValueFactory<>("importe"));
-
-		TableColumn<String, Lineas_Facturas> total_producto = new TableColumn<>("Total");
-		total_producto.setCellValueFactory(new PropertyValueFactory<>("total_importe"));
-		facturas.getColumns().addAll(linea, articulo, cantidad, importe, total_producto);
-
-		for (int contador = 0; contador < factura.getLineas_de_la_factura().size(); contador++) {
-			factura.getLineas_de_la_factura().get(contador).set_total_Importe();
-			facturas.getItems().add(factura.getLineas_de_la_factura().get(contador));
-			precio_total += factura.getLineas_de_la_factura().get(contador).getTotal_importe();
 		}
-
-		cliente.setText(factura.getCliente().getNombre() + System.lineSeparator() + factura.getCliente().getDireccion()
-				+ System.lineSeparator());
-		vendedor.setText(factura.getVendedor().getNombre() + System.lineSeparator());
-		numero_factura.setText(factura.getId() + "");
-		fecha_factura.setText(factura.getFecha().toString());
-		subtotal.setText(String.valueOf(precio_total));
-		precio_iva = (precio_total * 21) / 100;
-		iva.setText(String.valueOf(precio_iva));
-		total_de_la_factura.setText(String.valueOf(precio_iva + precio_total));
 
 	}
 
 	public void Exportar_factura_a_PDF() {
-		Facturas factura = new Facturas(ComboBox_Facturas.getSelectionModel().getSelectedItem());
+		Facturas factura = new Facturas(Lista_de_Facturas.get(contador_modificador));
 
 		FileChooser fc = creaFileChooser("Guardar pdf");
 		File file = (fc.showSaveDialog(escenario));
@@ -308,9 +359,9 @@ public class ControladorFormularioFacturas {
 			documento.add(tabla);
 
 		} catch (FileNotFoundException e) {
-			
+
 		} catch (DocumentException e) {
-			
+
 		}
 
 		documento.close();
@@ -319,34 +370,96 @@ public class ControladorFormularioFacturas {
 
 	private FileChooser creaFileChooser(String titulo) {
 		FileChooser fc = new FileChooser();
-		fc.setTitle(titulo);
-		fc.setInitialDirectory(new File(System.getProperty("user.home")));
-		FileChooser.ExtensionFilter filtro1 = new FileChooser.ExtensionFilter("Archivos pdf *.pdf", "*.pdf");
-		fc.getExtensionFilters().add(filtro1);
+		try {
+
+			fc.setTitle(titulo);
+			fc.setInitialDirectory(new File(System.getProperty("user.home")));
+			FileChooser.ExtensionFilter filtro1 = new FileChooser.ExtensionFilter("Archivos pdf *.pdf", "*.pdf");
+			fc.getExtensionFilters().add(filtro1);
+		} catch (Exception e) {
+
+		}
+
 		return fc;
 	}
 
 	public void poner_datos() {
+		try {
+			Facturas factura = new Facturas(Lista_de_Facturas.get(contador_modificador));
+			contador_modificador_lineas = facturas.getSelectionModel().getSelectedIndex();
+			factura(factura);
+			poner_datos_en_la_tabla(factura);
+		} catch (Exception e) {
 
-		contador_modificador = facturas.getSelectionModel().getSelectedIndex();
+		}
 
-		Facturas factura = new Facturas(ComboBox_Facturas.getSelectionModel().getSelectedItem());
+	}
+
+	public void poner_datos_controles(ActionEvent action) {
+		switch (((Button) action.getSource()).getId()) {
+		case "Primero":
+			contador_modificador = 0;
+			break;
+		case "Siguiente":
+			contador_modificador++;
+			break;
+		case "Ultimo":
+			contador_modificador = Lista_de_Facturas.size() - 1;
+			break;
+		case "Anterior":
+			contador_modificador--;
+			break;
+		case "Primero_lineas":
+			contador_modificador_lineas = 0;
+			break;
+		case "Siguiente_lineas":
+			contador_modificador_lineas++;
+			break;
+		case "Ultimo_lineas":
+			contador_modificador_lineas = Lista_de_Facturas.get(contador_modificador).getLineas_de_la_factura().size()
+					- 1;
+			break;
+		case "Anterior_lineas":
+			contador_modificador_lineas--;
+			break;
+		}
+		Facturas factura = null;
+		try {
+			factura = new Facturas(Lista_de_Facturas.get(contador_modificador));
+		} catch (Exception e) {
+			factura = new Facturas(Lista_de_Facturas.get(contador_modificador = 0));
+		}
+
+		factura(factura);
+		poner_datos_en_la_tabla(factura);
+	}
+
+	private void factura(Facturas factura) {
+
+		if (contador_modificador_lineas == -1) {
+			contador_modificador_lineas = 0;
+		}
+		Lineas_Facturas l = null;
+		try {
+			l = new Lineas_Facturas(factura.getLineas_de_la_factura().get(contador_modificador_lineas));
+		} catch (Exception e) {
+			contador_modificador_lineas = 0;
+		}
+		l = new Lineas_Facturas(factura.getLineas_de_la_factura().get(contador_modificador_lineas));
+		
+		cambiar_cantidad.setText(l.getCantidad() + "");
 
 		cambiar_cliente.getItems().clear();
 		cambiar_cliente.getItems().add(factura.getCliente());
 		cambiar_cliente.getSelectionModel().select(0);
 
 		cambiar_articulo.getItems().clear();
-		cambiar_articulo.getItems()
-				.add(((Lineas_Facturas) facturas.getSelectionModel().getSelectedItem()).getArticulo());
-		cambiar_articulo.getSelectionModel().select(0);
+		cambiar_articulo.getItems().add(l.getArticulo());
+		cambiar_articulo.getSelectionModel().select(l.getArticulo());
 
 		cambiar_vendedor.getItems().clear();
 		cambiar_vendedor.getItems().add(factura.getVendedor());
 		cambiar_vendedor.getSelectionModel().select(0);
-
-		Lineas_Facturas l = new Lineas_Facturas(factura.getLineas_de_la_factura().get(contador_modificador));
-		this.cambiar_cantidad.setText(l.getCantidad() + "");
 
 		java.sql.Date date2 = (java.sql.Date) factura.getFecha();
 
@@ -354,7 +467,7 @@ public class ControladorFormularioFacturas {
 
 		this.Fecha_factura2.setValue(date);
 	}
-	
+
 	public void insertar_linea() {
 		facturas.getColumns().clear();
 		Factura_a_crear = new Facturas(Factura_a_crear);
@@ -394,19 +507,24 @@ public class ControladorFormularioFacturas {
 		facturas.getItems().add(Factura_a_crear.getLineas_de_la_factura().get(Factura_a_crear.getLineas_de_la_factura().size() - 1));
 
 		Factura_a_crear.calcular_total_factura();
-		cliente.setText(Factura_a_crear.getCliente().getNombre() + System.lineSeparator() + Factura_a_crear.getCliente().getDireccion() + System.lineSeparator());
+		cliente.setText(Factura_a_crear.getCliente().getNombre() + System.lineSeparator()
+				+ Factura_a_crear.getCliente().getDireccion() + System.lineSeparator());
 		vendedor.setText(Factura_a_crear.getVendedor().getNombre() + System.lineSeparator());
 		numero_factura.setText(Factura_a_crear.getId() + "");
 		fecha_factura.setText(Factura_a_crear.getFecha().toString());
 		subtotal.setText(String.valueOf(Factura_a_crear.getTotal()));
 		iva.setText(String.valueOf((Factura_a_crear.getTotal() * 21) / 100));
-		total_de_la_factura.setText(String.valueOf(((Factura_a_crear.getTotal() * 21) / 100) + Factura_a_crear.getTotal()));
+		total_de_la_factura
+				.setText(String.valueOf(((Factura_a_crear.getTotal() * 21) / 100) + Factura_a_crear.getTotal()));
 		formas_de_pago.getSelectionModel().select(this.Factura_a_crear.getForma_de_pago());
 	}
 
 	public void insertar_factura() {
 		try {
-			controladorfacturas.insert(Factura_a_crear);
+
+			if (controladorfacturas.insert(Factura_a_crear)) {
+				(new Main()).mensajeConfirmacion("Innsercion de facturas completada", "", "");
+			}
 
 			for (Lineas_Facturas linea_factura : Factura_a_crear.getLineas_de_la_factura()) {
 				actualizar_stock(linea_factura.getArticulo(), 0, linea_factura.getCantidad());
@@ -415,21 +533,22 @@ public class ControladorFormularioFacturas {
 			facturas.getColumns().clear();
 			Factura_a_crear = new Facturas();
 			facturas.getItems().clear();
-			Lista_de_Facturas = (es_admin) ? controladorfacturas.findAll() : controladorfacturas.findAll2(cliente_actual);
+			Lista_de_Facturas = (es_admin) ? controladorfacturas.findAll()
+					: controladorfacturas.findAll2(cliente_actual);
 		} catch (Exception e) {
-			
+			(new Main()).mensajeExcepcion(e, e.getMessage());
 		}
 	}
-	
+
 	public void actualizar_linea() {
 		int cantidad = 0;
 		int cantidad_antes = 0;
 
-		Facturas factura = new Facturas(ComboBox_Facturas.getSelectionModel().getSelectedItem());
+		Facturas factura = new Facturas(Lista_de_Facturas.get(contador_modificador));
 
 		cantidad = Integer.parseInt(cambiar_cantidad.getText());
 
-		Lineas_Facturas l2 = factura.getLineas_de_la_factura().get(contador_modificador);
+		Lineas_Facturas l2 = factura.getLineas_de_la_factura().get(contador_modificador_lineas);
 		l2.setArticulo(cambiar_articulo.getSelectionModel().getSelectedItem());
 		cantidad_antes = l2.getCantidad();
 		l2.setCantidad(cantidad);
@@ -472,11 +591,14 @@ public class ControladorFormularioFacturas {
 		actualizar_stock(cambiar_articulo.getSelectionModel().getSelectedItem(), cantidad_antes, cantidad);
 
 		try {
-			controladorfacturas.update(factura);
+
+			if (controladorfacturas.update(factura)) {
+				(new Main()).mensajeConfirmacion("Actualizacion de facturas completada", "", "");
+			}
+
 		} catch (Exception e) {
-
+			(new Main()).mensajeExcepcion(e, e.getMessage());
 		}
-
 	}
 
 	public void actualizar_stock(Articulos articulo, int cantidad_antes, int cantidad) {
@@ -495,12 +617,16 @@ public class ControladorFormularioFacturas {
 
 		}
 	}
-	
+
 	public void eliminar_factura() {
 		try {
-			controladorfacturas.delete(this.ComboBox_Facturas.getSelectionModel().getSelectedItem().getId());
-		} catch (Exception e) {
 
+			if (controladorfacturas.delete(ComboBox_Facturas.getSelectionModel().getSelectedItem().getId())) {
+				(new Main()).mensajeConfirmacion("Eliminacion de facturas completada", "", "");
+			}
+
+		} catch (Exception e) {
+			(new Main()).mensajeExcepcion(e, e.getMessage());
 		}
 	}
 }
