@@ -210,7 +210,7 @@ public class ControladorFormularioConsultas {
 
 			tabla_consulta2.getItems().clear();
 			tabla_consulta2.getColumns().clear();
-
+			
 			List<Facturas> Facturas_recibidas = null;
 			Facturas_recibidas = new ArrayList<Facturas>();
 			String campos_otros_admin = "v_empresa_ad_p1.facturas.id as id, v_empresa_ad_p1.facturas.fecha as fecha, '' as total";
@@ -281,21 +281,21 @@ public class ControladorFormularioConsultas {
 				}
 
 				((TableColumn<Facturas, String>) tabla_consulta.getColumns().get(0))
-						.setCellValueFactory(new PropertyValueFactory<>("id"));
+						.setCellValueFactory(new PropertyValueFactory<>(controladorfacturas.campos.get(0)));
 				((TableColumn<Facturas, String>) tabla_consulta.getColumns().get(1))
-						.setCellValueFactory(new PropertyValueFactory<>("fecha"));
+						.setCellValueFactory(new PropertyValueFactory<>(controladorfacturas.campos.get(1)));
 				((TableColumn<Facturas, String>) tabla_consulta.getColumns().get(2))
-						.setCellValueFactory(new PropertyValueFactory<>("Total"));
+						.setCellValueFactory(new PropertyValueFactory<>(controladorfacturas.campos.get(2)));
 
 				((TableColumn<Clientes, String>) tabla_consulta1.getColumns().get(0))
-						.setCellValueFactory(new PropertyValueFactory<>("id"));
+						.setCellValueFactory(new PropertyValueFactory<>(controladorfacturas.campos.get(3)));
 				((TableColumn<Clientes, String>) tabla_consulta1.getColumns().get(1))
-						.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+						.setCellValueFactory(new PropertyValueFactory<>(controladorfacturas.campos.get(4)));
 
 				((TableColumn<Vendedores, String>) tabla_consulta2.getColumns().get(0))
-						.setCellValueFactory(new PropertyValueFactory<>("id"));
+						.setCellValueFactory(new PropertyValueFactory<>(controladorfacturas.campos.get(5)));
 				((TableColumn<Vendedores, String>) tabla_consulta2.getColumns().get(1))
-						.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+						.setCellValueFactory(new PropertyValueFactory<>(controladorfacturas.campos.get(6)));
 
 				boolean cantidad = this.checkbox_cantidad.isSelected();
 				if (cantidad) {
@@ -351,7 +351,7 @@ public class ControladorFormularioConsultas {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			
 		}
 
 	}

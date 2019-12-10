@@ -372,11 +372,9 @@ public class FacturasDAO implements GenericoDAO<Facturas> {
 		preparedstatement = Conexion.getConnection().prepareStatement(sql_DELETE_Lineas_facturas);
 		preparedstatement.setInt(1, id);
 		realizado2=preparedstatement.executeUpdate();
-		System.out.println(preparedstatement);
 		preparedstatement = Conexion.getConnection().prepareStatement(sql_DELETE);
 		preparedstatement.setInt(1, id);
 		realizado=preparedstatement.executeUpdate();
-		System.out.println(preparedstatement);
 		return (realizado > 0) && (realizado2 > 0);
 	}
 

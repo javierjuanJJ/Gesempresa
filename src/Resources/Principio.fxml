@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 
-<AnchorPane prefHeight="335.0" prefWidth="467.0" stylesheets="@dao.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlador.ControladorPrincipio">
+<AnchorPane prefHeight="335.0" prefWidth="467.0" stylesheets="@dao.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlador.ControladorPrincipio">
    <children>
       <AnchorPane prefHeight="335.0" prefWidth="467.0" styleClass="fondo_principio" stylesheets="@dao.css">
          <children>
@@ -17,7 +19,7 @@
             </HBox>
             <Label alignment="CENTER" layoutX="48.0" layoutY="-1.0" prefHeight="50.0" prefWidth="395.0" styleClass="label_texto_principio" text="Formularios" />
             <Button id="Pantalla_Facturas" fx:id="facturas" disable="true" layoutX="1.0" layoutY="75.0" mnemonicParsing="false" onAction="#Cambiar_Pantalla" prefHeight="25.0" prefWidth="236.0" text="Facturas" />
-            <Button fx:id="grupos" disable="true" layoutX="237.0" layoutY="75.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="231.0" text="Grupos" />
+            <Button id="Pantalla_Grupos" fx:id="grupos" disable="true" layoutX="237.0" layoutY="75.0" mnemonicParsing="false" onAction="#Cambiar_Pantalla" prefHeight="25.0" prefWidth="231.0" text="Grupos" />
             <Label layoutX="34.0" layoutY="151.0" text="Usuario: " />
             <Label layoutX="34.0" layoutY="190.0" text="Contraseña: " />
             <PasswordField fx:id="contrasenya" layoutX="128.0" layoutY="186.0" />
